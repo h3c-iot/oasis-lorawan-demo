@@ -44,20 +44,20 @@
 									<listOptionValue builtIn="false" value="ACTIVE_REGION=LORAMAC_REGION_CN470"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.1393509741" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\example\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\apps\common\LmHandler\packages&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\example\stm32\NucleoL073\apps\LoRaMac\classA&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\example\stm32\NucleoL073\board&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\example\stm32\NucleoL073\board\cmsis&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\loramac\radio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\loramac\mac\region&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\loramac\mac&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\apps\common\LmHandler&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\apps\common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\example\stm32\STM32Cube_FW_L0_V1.11.2\Drivers\BSP\STM32L0xx_Nucleo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\example\stm32\STM32Cube_FW_L0_V1.11.2\Drivers\CMSIS\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\lora-sdk\example\stm32\STM32Cube_FW_L0_V1.11.2\Drivers\STM32L0xx_HAL_Driver\Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\example\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\lora-sdk\system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\lora-sdk\apps\common\LmHandler\packages&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\example\stm32\NucleoL073\apps\LoRaMac\classA&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\example\stm32\NucleoL073\board&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\example\stm32\NucleoL073\board\cmsis&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\lora-sdk\loramac\radio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\lora-sdk\loramac\mac\region&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\lora-sdk\loramac\mac&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\lora-sdk\apps\common\LmHandler&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\lora-sdk\apps\common&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\example\stm32\STM32Cube_FW_L0_V1.11.2\Drivers\BSP\STM32L0xx_Nucleo&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\example\stm32\STM32Cube_FW_L0_V1.11.2\Drivers\CMSIS\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;I:\stm32_prj\oasis-lorawan-demo\example\stm32\STM32Cube_FW_L0_V1.11.2\Drivers\STM32L0xx_HAL_Driver\Inc&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.807470566" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

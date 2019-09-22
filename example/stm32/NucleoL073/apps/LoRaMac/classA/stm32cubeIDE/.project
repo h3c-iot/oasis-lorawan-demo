@@ -29,11 +29,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>apps</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>classA</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -44,24 +39,9 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac</name>
+			<name>lora-sdk</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>system</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>apps/common</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>apps/readme.txt</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/readme.txt</locationURI>
 		</link>
 		<link>
 			<name>classA/Commissioning.h</name>
@@ -84,184 +64,19 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac</name>
+			<name>lora-sdk/apps</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/radio</name>
+			<name>lora-sdk/loramac</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/readme.txt</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/readme.txt</locationURI>
-		</link>
-		<link>
-			<name>loramac/soft-se</name>
+			<name>lora-sdk/system</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>system/adc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/adc.c</locationURI>
-		</link>
-		<link>
-			<name>system/adc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/adc.h</locationURI>
-		</link>
-		<link>
-			<name>system/delay.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/delay.c</locationURI>
-		</link>
-		<link>
-			<name>system/delay.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/delay.h</locationURI>
-		</link>
-		<link>
-			<name>system/eeprom.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/eeprom.c</locationURI>
-		</link>
-		<link>
-			<name>system/eeprom.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/eeprom.h</locationURI>
-		</link>
-		<link>
-			<name>system/fifo.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/fifo.c</locationURI>
-		</link>
-		<link>
-			<name>system/fifo.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/fifo.h</locationURI>
-		</link>
-		<link>
-			<name>system/gpio.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/gpio.c</locationURI>
-		</link>
-		<link>
-			<name>system/gpio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/gpio.h</locationURI>
-		</link>
-		<link>
-			<name>system/gps.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/gps.c</locationURI>
-		</link>
-		<link>
-			<name>system/gps.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/gps.h</locationURI>
-		</link>
-		<link>
-			<name>system/i2c.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/i2c.c</locationURI>
-		</link>
-		<link>
-			<name>system/i2c.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/i2c.h</locationURI>
-		</link>
-		<link>
-			<name>system/nvmm.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/nvmm.c</locationURI>
-		</link>
-		<link>
-			<name>system/nvmm.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/nvmm.h</locationURI>
-		</link>
-		<link>
-			<name>system/serial.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/serial.h</locationURI>
-		</link>
-		<link>
-			<name>system/spi.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/spi.h</locationURI>
-		</link>
-		<link>
-			<name>system/systime.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/systime.c</locationURI>
-		</link>
-		<link>
-			<name>system/systime.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/systime.h</locationURI>
-		</link>
-		<link>
-			<name>system/timer.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/timer.c</locationURI>
-		</link>
-		<link>
-			<name>system/timer.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/timer.h</locationURI>
-		</link>
-		<link>
-			<name>system/uart.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/uart.c</locationURI>
-		</link>
-		<link>
-			<name>system/uart.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/uart.h</locationURI>
-		</link>
-		<link>
-			<name>system/utilities.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/system/utilities.c</locationURI>
-		</link>
-		<link>
-			<name>apps/common/CayenneLpp.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/CayenneLpp.c</locationURI>
-		</link>
-		<link>
-			<name>apps/common/CayenneLpp.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/CayenneLpp.h</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandler</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandlerMsgDisplay.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandlerMsgDisplay.c</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandlerMsgDisplay.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandlerMsgDisplay.h</locationURI>
-		</link>
-		<link>
-			<name>apps/common/NvmCtxMgmt.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/NvmCtxMgmt.c</locationURI>
-		</link>
-		<link>
-			<name>apps/common/NvmCtxMgmt.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/NvmCtxMgmt.h</locationURI>
 		</link>
 		<link>
 			<name>example/include/adc-board.h</name>
@@ -369,174 +184,159 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/LoRaMac.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMac.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMac.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMac.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacAdr.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacAdr.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacAdr.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacAdr.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacClassB.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacClassB.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacClassB.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacClassB.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacClassBConfig.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacClassBConfig.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacCommands.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacCommands.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacCommands.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacCommands.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacConfirmQueue.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacConfirmQueue.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacConfirmQueue.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacConfirmQueue.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacCrypto.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacCrypto.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacCrypto.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacCrypto.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacHeaderTypes.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacHeaderTypes.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacMessageTypes.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacMessageTypes.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacParser.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacParser.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacParser.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacParser.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacSerializer.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacSerializer.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacSerializer.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacSerializer.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacTest.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacTest.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/LoRaMacTypes.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/LoRaMacTypes.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/mac/region</name>
+			<name>lora-sdk/apps/common</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/secure-element.h</name>
+			<name>lora-sdk/apps/readme.txt</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/secure-element.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/readme.txt</locationURI>
 		</link>
 		<link>
-			<name>loramac/radio/radio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/radio/radio.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/radio/sx1276</name>
+			<name>lora-sdk/loramac/mac</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/soft-se/aes.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/soft-se/aes.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/soft-se/aes.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/soft-se/aes.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/soft-se/cmac.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/soft-se/cmac.c</locationURI>
-		</link>
-		<link>
-			<name>loramac/soft-se/cmac.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/soft-se/cmac.h</locationURI>
-		</link>
-		<link>
-			<name>loramac/soft-se/soft-se.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/soft-se/soft-se.c</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandler/LmHandler.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/LmHandler.c</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandler/LmHandler.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/LmHandler.h</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandler/LmHandlerTypes.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/LmHandlerTypes.h</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandler/packages</name>
+			<name>lora-sdk/loramac/radio</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/readme.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/readme.txt</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/soft-se</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/adc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/adc.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/adc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/adc.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/delay.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/delay.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/delay.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/delay.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/eeprom.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/eeprom.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/eeprom.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/eeprom.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/fifo.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/fifo.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/fifo.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/fifo.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/gpio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/gpio.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/gpio.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/gpio.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/gps.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/gps.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/gps.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/gps.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/i2c.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/i2c.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/i2c.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/i2c.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/nvmm.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/nvmm.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/nvmm.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/nvmm.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/serial.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/serial.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/spi.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/spi.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/systime.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/systime.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/systime.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/systime.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/timer.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/timer.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/timer.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/timer.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/uart.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/uart.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/uart.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/uart.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/system/utilities.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/system/utilities.c</locationURI>
 		</link>
 		<link>
 			<name>example/stm32/NucleoL073/board</name>
@@ -549,199 +349,189 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/Region.c</name>
+			<name>lora-sdk/apps/common/CayenneLpp.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/Region.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/CayenneLpp.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/Region.h</name>
+			<name>lora-sdk/apps/common/CayenneLpp.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/Region.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/CayenneLpp.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionAS923.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionAS923.c</locationURI>
+			<name>lora-sdk/apps/common/LmHandler</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionAS923.h</name>
+			<name>lora-sdk/apps/common/LmHandlerMsgDisplay.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionAS923.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandlerMsgDisplay.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionAU915.c</name>
+			<name>lora-sdk/apps/common/LmHandlerMsgDisplay.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionAU915.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandlerMsgDisplay.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionAU915.h</name>
+			<name>lora-sdk/apps/common/NvmCtxMgmt.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionAU915.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/NvmCtxMgmt.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionCN470.c</name>
+			<name>lora-sdk/apps/common/NvmCtxMgmt.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionCN470.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/NvmCtxMgmt.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionCN470.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMac.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionCN470.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMac.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionCN779.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMac.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionCN779.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMac.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionCN779.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacAdr.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionCN779.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacAdr.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionCommon.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacAdr.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionCommon.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacAdr.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionCommon.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacClassB.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionCommon.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacClassB.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionEU433.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacClassB.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionEU433.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacClassB.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionEU433.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacClassBConfig.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionEU433.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacClassBConfig.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionEU868.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacCommands.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionEU868.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacCommands.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionEU868.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacCommands.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionEU868.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacCommands.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionIN865.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacConfirmQueue.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionIN865.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacConfirmQueue.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionIN865.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacConfirmQueue.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionIN865.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacConfirmQueue.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionKR920.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacCrypto.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionKR920.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacCrypto.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionKR920.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacCrypto.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionKR920.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacCrypto.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionRU864.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacHeaderTypes.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionRU864.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacHeaderTypes.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionRU864.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacMessageTypes.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionRU864.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacMessageTypes.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionUS915.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacParser.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionUS915.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacParser.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/mac/region/RegionUS915.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacParser.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/mac/region/RegionUS915.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacParser.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/radio/sx1276/sx1276.c</name>
+			<name>lora-sdk/loramac/mac/LoRaMacSerializer.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/radio/sx1276/sx1276.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacSerializer.c</locationURI>
 		</link>
 		<link>
-			<name>loramac/radio/sx1276/sx1276.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacSerializer.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/radio/sx1276/sx1276.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacSerializer.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/radio/sx1276/sx1276Regs-Fsk.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacTest.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/radio/sx1276/sx1276Regs-Fsk.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacTest.h</locationURI>
 		</link>
 		<link>
-			<name>loramac/radio/sx1276/sx1276Regs-LoRa.h</name>
+			<name>lora-sdk/loramac/mac/LoRaMacTypes.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/loramac/radio/sx1276/sx1276Regs-LoRa.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/LoRaMacTypes.h</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/FragDecoder.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/FragDecoder.c</locationURI>
+			<name>lora-sdk/loramac/mac/region</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/FragDecoder.h</name>
+			<name>lora-sdk/loramac/mac/secure-element.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/FragDecoder.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/secure-element.h</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/LmhPackage.h</name>
+			<name>lora-sdk/loramac/radio/radio.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhPackage.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/radio/radio.h</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/LmhpClockSync.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpClockSync.c</locationURI>
+			<name>lora-sdk/loramac/radio/sx1276</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/LmhpClockSync.h</name>
+			<name>lora-sdk/loramac/soft-se/aes.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpClockSync.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/soft-se/aes.c</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/LmhpCompliance.c</name>
+			<name>lora-sdk/loramac/soft-se/aes.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpCompliance.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/soft-se/aes.h</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/LmhpCompliance.h</name>
+			<name>lora-sdk/loramac/soft-se/cmac.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpCompliance.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/soft-se/cmac.c</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/LmhpFragmentation.c</name>
+			<name>lora-sdk/loramac/soft-se/cmac.h</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpFragmentation.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/soft-se/cmac.h</locationURI>
 		</link>
 		<link>
-			<name>apps/common/LmHandler/packages/LmhpFragmentation.h</name>
+			<name>lora-sdk/loramac/soft-se/soft-se.c</name>
 			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpFragmentation.h</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandler/packages/LmhpRemoteMcastSetup.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpRemoteMcastSetup.c</locationURI>
-		</link>
-		<link>
-			<name>apps/common/LmHandler/packages/LmhpRemoteMcastSetup.h</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/apps/common/LmHandler/packages/LmhpRemoteMcastSetup.h</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/soft-se/soft-se.c</locationURI>
 		</link>
 		<link>
 			<name>example/stm32/NucleoL073/board/adc-board.c</name>
@@ -819,6 +609,166 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>lora-sdk/apps/common/LmHandler/LmHandler.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/LmHandler.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/LmHandler.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/LmHandler.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/LmHandlerTypes.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/LmHandlerTypes.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/Region.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/Region.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/Region.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/Region.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionAS923.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionAS923.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionAS923.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionAS923.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionAU915.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionAU915.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionAU915.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionAU915.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionCN470.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionCN470.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionCN470.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionCN470.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionCN779.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionCN779.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionCN779.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionCN779.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionCommon.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionCommon.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionCommon.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionCommon.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionEU433.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionEU433.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionEU433.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionEU433.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionEU868.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionEU868.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionEU868.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionEU868.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionIN865.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionIN865.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionIN865.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionIN865.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionKR920.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionKR920.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionKR920.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionKR920.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionRU864.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionRU864.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionRU864.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionRU864.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionUS915.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionUS915.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/mac/region/RegionUS915.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/mac/region/RegionUS915.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/radio/sx1276/sx1276.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/radio/sx1276/sx1276.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/radio/sx1276/sx1276.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/radio/sx1276/sx1276.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/radio/sx1276/sx1276Regs-Fsk.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/radio/sx1276/sx1276Regs-Fsk.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/loramac/radio/sx1276/sx1276Regs-LoRa.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/loramac/radio/sx1276/sx1276Regs-LoRa.h</locationURI>
+		</link>
+		<link>
 			<name>example/stm32/NucleoL073/board/cmsis/arm-gcc</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -872,6 +822,61 @@
 			<name>example/stm32/STM32Cube_FW_L0_V1.11.2/Drivers/STM32L0xx_HAL_Driver/Src</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/FragDecoder.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/FragDecoder.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/FragDecoder.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/FragDecoder.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhPackage.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhPackage.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpClockSync.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpClockSync.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpClockSync.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpClockSync.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpCompliance.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpCompliance.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpCompliance.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpCompliance.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpFragmentation.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpFragmentation.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpFragmentation.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpFragmentation.h</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpRemoteMcastSetup.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpRemoteMcastSetup.c</locationURI>
+		</link>
+		<link>
+			<name>lora-sdk/apps/common/LmHandler/packages/LmhpRemoteMcastSetup.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/lora-sdk/apps/common/LmHandler/packages/LmhpRemoteMcastSetup.h</locationURI>
 		</link>
 		<link>
 			<name>example/stm32/NucleoL073/board/cmsis/arm-gcc/startup_stm32l073xx.s</name>
