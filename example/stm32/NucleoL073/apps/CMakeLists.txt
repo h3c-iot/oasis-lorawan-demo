@@ -14,13 +14,21 @@ cmake_minimum_required(VERSION 3.6)
 #---------------------------------------------------------------------------------------
 # 案例应用定制
 #---------------------------------------------------------------------------------------
-set(APPLICATION_LIST classA)
+set(APPLICATION_LIST classA classB classC)
 set(APPLICATION classA CACHE STRING "Default Application is classA")
 set_property(CACHE APPLICATION PROPERTY STRINGS ${APPLICATION_LIST})
 
 if(APPLICATION STREQUAL classA)
 	list(APPEND ${PROJECT_NAME}_SOURCES
 		"${CMAKE_CURRENT_SOURCE_DIR}/LoRaMac/classA/main.c"
+	)
+elseif(APPLICATION STREQUAL classB)
+	list(APPEND ${PROJECT_NAME}_SOURCES
+		"${CMAKE_CURRENT_SOURCE_DIR}/LoRaMac/classB/main.c"
+	)
+elseif(APPLICATION STREQUAL classC)
+	list(APPEND ${PROJECT_NAME}_SOURCES
+		"${CMAKE_CURRENT_SOURCE_DIR}/LoRaMac/classC/main.c"
 	)
 endif()
 
