@@ -1,6 +1,6 @@
 ##################################################################################
 ##
-## Copyright (C) 2019, New H3C Technologies Co., Ltd. All rights reserved.
+## Copyright (C) 2019, New H3C Technologies Co., Ltd.
 ##
 ##      License: Revised BSD License, see LICENSE.TXT file included in the project
 ## Data Created: 2019/10/9

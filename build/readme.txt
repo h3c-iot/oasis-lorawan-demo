@@ -35,10 +35,13 @@ e. 如果要重新编译，可以删除build目录下生成的所有文件，或者删除CMakeCache.txt文件
 射频选择，可选参数如下：
 * SX1272MB2DAS 
 * SX1276MB1LAS 
-* SX1276MB1MAS ：默认
+* SX1276MB1MAS
 * SX1261MBXBAS 
 * SX1262MBXCAS 
 * SX1262MBXDAS
+* SX1278H3C     
+* SX1278ACSIPS78F  ：默认
+* WSL305S
 可以通过-DMBED_RADIO_SHIELD="SX1276MB1LAS"来进行选择
 
 
@@ -71,12 +74,16 @@ e. 如果要重新编译，可以删除build目录下生成的所有文件，或者删除CMakeCache.txt文件
 
 4、APPLICATION
 指定当前编译的应用案例，可以通过-DAPPLICATION="XXXXXX"选择，可选参数如下：
-* classA : 默认
+* classA
   官方的ClassA案例程序
 * classC
   官方的classC案例程序
 * classB
   官方的classB案例程序，需要开启Class B使能
+* newclassA ：默认
+  融合SDK框架后提供的class A案例程序，提供探测入网功能
+* FwUpdate
+  针对光宝WSL305S模组的本地升级案例  
   
 5、CLASSB_ENABLED
 ClassB使能开关，可以通过-DCLASSB_ENABLED="ON"开启，默认关闭。

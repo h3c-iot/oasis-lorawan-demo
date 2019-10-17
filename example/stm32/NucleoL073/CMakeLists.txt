@@ -1,6 +1,6 @@
 ##################################################################################
 ##
-## Copyright (C) 2019, New H3C Technologies Co., Ltd. All rights reserved.
+## Copyright (C) 2019, New H3C Technologies Co., Ltd.
 ##
 ##      License: Revised BSD License, see LICENSE.TXT file included in the project
 ## Data Created: 2019/10/9
@@ -60,8 +60,16 @@ elseif(MBED_RADIO_SHIELD STREQUAL SX1262MBXCAS)
     list(APPEND ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/board/sx1262mbxcas-board.c")
 elseif(MBED_RADIO_SHIELD STREQUAL SX1262MBXDAS)
     list(APPEND ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/board/sx1262mbxdas-board.c")
+elseif(MBED_RADIO_SHIELD STREQUAL SX1278ACSIPS78F)
+    list(APPEND ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/board/sx1278acsipS78F-board.c")
+elseif(MBED_RADIO_SHIELD STREQUAL SX1278H3C)
+    list(APPEND ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/board/sx1278h3c-board.c")
+elseif(MBED_RADIO_SHIELD STREQUAL WSL305S)
+    list(APPEND ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/board/sx1278acsipS78F-board.c")
+	message(STATUS "Select WSL305S")
 else()
-    message(STATUS " Please specify the MBED_RADIO_SHIELD !\nPossible values are: SX1272MB2DAS, SX1276MB1LAS, SX1276MB1MAS, SX1261MBXBAS, SX1262MBXCAS and SX1262MBXDAS.")
+    message(STATUS " Please specify the MBED_RADIO_SHIELD !\nPossible values are: SX1272MB2DAS, SX1276MB1LAS, SX1276MB1MAS, SX1261MBXBAS, 
+    SX1262MBXCAS, SX1262MBXDAS, SX1278ACSIPS78F, SX1278H3C.")
 endif()
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
@@ -76,7 +84,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/../STM32Cube_FW_L0_V1.11.2/Drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../STM32Cube_FW_L0_V1.11.2/Drivers/STM32L0xx_HAL_Driver/Inc
 	${CMAKE_CURRENT_SOURCE_DIR}/../../../lora-sdk/system
-	${CMAKE_CURRENT_SOURCE_DIR}/../../../lora-sdk/loramac/radio
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../lora-sdk/lorawan/loramac/radio
 )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/apps)

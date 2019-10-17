@@ -31,8 +31,9 @@
  */
 typedef enum
 {
-    UART_1,
-    UART_2,
+    UART_SERIAL,  /* for serial */
+    UART_DBG,   /* for debug, printf */
+    UART_MAX,
     UART_USB_CDC = 255,
 }UartId_t;
 
@@ -182,5 +183,14 @@ uint8_t UartGetChar( Uart_t *obj, uint8_t *data );
  * \retval status           [0: OK, 1: Busy]
  */
 uint8_t UartGetBuffer( Uart_t *obj, uint8_t *buffer, uint16_t size, uint16_t *nbReadBytes );
+
+void *UartRegister( Uart_t *pstUart, UartId_t enUartId, PinNames enPinTx, PinNames enPinRx );
+void UartDeRegister(UartId_t enUartId);
+Uart_t *UartOpen(UartId_t enUartId, UartMode_t mode, uint32_t baudrate, 
+                    WordLength_t wordLength, StopBits_t stopBits, 
+                    Parity_t parity, FlowCtrl_t flowCtrl);
+void UartClose(Uart_t *pstUart);
+
+
 
 #endif // __UART_H__

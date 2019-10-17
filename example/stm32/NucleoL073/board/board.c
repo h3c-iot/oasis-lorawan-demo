@@ -36,7 +36,7 @@
     #include "sx126x-board.h"
 #elif defined( SX1272MB2DAS)
     #include "sx1272-board.h"
-#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS )
+#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS ) || defined( SX1278ACSIPS78F ) || defined( SX1278H3C )
     #include "sx1276-board.h"
 #endif
 #include "board.h"
@@ -57,6 +57,7 @@ Gpio_t Led2;
 /*
  * MCU objects
  */
+Uart_t Uart4;
 Uart_t Uart2;
 
 /*!
@@ -97,11 +98,14 @@ static bool UsbIsConnected = false;
 /*!
  * UART2 FIFO buffers size
  */
-#define UART2_FIFO_TX_SIZE                                1024
-#define UART2_FIFO_RX_SIZE                                1024
+#define UART_FIFO_TX_SIZE                                1024
+#define UART_FIFO_RX_SIZE                                1024
 
-uint8_t Uart2TxBuffer[UART2_FIFO_TX_SIZE];
-uint8_t Uart2RxBuffer[UART2_FIFO_RX_SIZE];
+uint8_t Uart4TxBuffer[UART_FIFO_TX_SIZE];
+uint8_t Uart4RxBuffer[UART_FIFO_RX_SIZE];
+
+uint8_t Uart2TxBuffer[UART_FIFO_TX_SIZE];
+uint8_t Uart2RxBuffer[UART_FIFO_RX_SIZE];
 
 /*!
  * Flag to indicate if the SystemWakeupTime is Calibrated
@@ -147,11 +151,15 @@ void BoardInitMcu( void )
 
         UsbIsConnected = true;
 
-        FifoInit( &Uart2.FifoTx, Uart2TxBuffer, UART2_FIFO_TX_SIZE );
-        FifoInit( &Uart2.FifoRx, Uart2RxBuffer, UART2_FIFO_RX_SIZE );
+        FifoInit( &Uart4.FifoTx, Uart4TxBuffer, UART_FIFO_TX_SIZE );
+        FifoInit( &Uart4.FifoRx, Uart4RxBuffer, UART_FIFO_RX_SIZE );
+        UartRegister(&Uart4, UART_SERIAL, UART4_TX, UART4_RX);
+        
+        FifoInit( &Uart2.FifoTx, Uart2TxBuffer, UART_FIFO_TX_SIZE );
+        FifoInit( &Uart2.FifoRx, Uart2RxBuffer, UART_FIFO_RX_SIZE );
         // Configure your terminal for 8 Bits data (7 data bit + 1 parity bit), no parity and no flow ctrl
-        UartInit( &Uart2, UART_2, UART_TX, UART_RX );
-        UartConfig( &Uart2, RX_TX, 921600, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
+        UartInit( &Uart2, UART_DBG, UART2_TX, UART2_RX );
+        UartConfig( &Uart2, RX_TX, 115200, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
 
         RtcInit( );
 
@@ -173,7 +181,7 @@ void BoardInitMcu( void )
 #elif defined( SX1272MB2DAS)
     SpiInit( &SX1272.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
     SX1272IoInit( );
-#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS )
+#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS ) || defined( SX1278ACSIPS78F ) || defined( SX1278H3C )
     SpiInit( &SX1276.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
     SX1276IoInit( );
 #endif
@@ -187,7 +195,7 @@ void BoardInitMcu( void )
 #elif defined( SX1272MB2DAS)
         SX1272IoDbgInit( );
         SX1272IoTcxoInit( );
-#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS )
+#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS ) || defined( SX1278ACSIPS78F ) || defined( SX1278H3C )
         SX1276IoDbgInit( );
         SX1276IoTcxoInit( );
 #endif
@@ -214,10 +222,12 @@ void BoardDeInitMcu( void )
 #elif defined( SX1272MB2DAS)
     SpiDeInit( &SX1272.Spi );
     SX1272IoDeInit( );
-#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS )
+#elif defined( SX1276MB1LAS ) || defined( SX1276MB1MAS ) || defined( SX1278ACSIPS78F ) || defined( SX1278H3C )
     SpiDeInit( &SX1276.Spi );
     SX1276IoDeInit( );
 #endif
+
+    UartDeRegister(UART_SERIAL);
 }
 
 uint32_t BoardGetRandomSeed( void )

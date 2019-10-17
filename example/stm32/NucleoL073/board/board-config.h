@@ -69,7 +69,7 @@
 #define RADIO_DBG_PIN_TX                            PB_6
 #define RADIO_DBG_PIN_RX                            PC_7
 
-#elif defined( SX1272MB2DAS) || defined( SX1276MB1LAS ) || defined( SX1276MB1MAS )
+#elif defined( SX1272MB2DAS) || defined( SX1276MB1LAS ) || defined( SX1276MB1MAS ) || defined( SX1278ACSIPS78F ) || defined( SX1278H3C ) || defined( WSL305S )
 
 #define RADIO_NSS                                   PB_6
 
@@ -103,7 +103,11 @@
 #define I2C_SCL                                     PB_8
 #define I2C_SDA                                     PB_9
 
-#define UART_TX                                     PA_2
-#define UART_RX                                     PA_3
+#define UART2_TX                                     PA_2
+#define UART2_RX                                     PA_3
+
+#define UART4_TX                                     PC_10
+#define UART4_RX                                     PC_11
+
 
 #endif // __BOARD_CONFIG_H__

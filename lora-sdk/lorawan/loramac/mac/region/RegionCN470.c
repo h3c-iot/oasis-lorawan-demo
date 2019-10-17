@@ -148,11 +148,15 @@ static uint8_t CountNbOfEnabledChannels( uint8_t datarate, uint16_t* channelsMas
                 { // Check if the current channel selection supports the given datarate
                     continue;
                 }
-                if( bands[channels[i + j].Band].TimeOff > 0 )
+                                              
+                /*
+                *delete by H3C yys1819 2019 10/31
+                */
+                /*if( bands[channels[i + j].Band].TimeOff > 0 )
                 { // Check if the band is available for transmission
                     delayTransmission++;
                     continue;
-                }
+                }*/
                 enabledChannels[nbEnabledChannels++] = i + j;
             }
         }

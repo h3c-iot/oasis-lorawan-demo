@@ -20,6 +20,8 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
+#include <string.h>
+#include <stdlib.h>
 #include "uart-board.h"
 #include "uart.h"
 
@@ -62,3 +64,82 @@ uint8_t UartGetBuffer( Uart_t *obj, uint8_t *buffer, uint16_t size, uint16_t *nb
 {
     return UartMcuGetBuffer( obj, buffer, size, nbReadBytes );
 }
+
+/*==================== add by wangzhen ===================*/
+typedef struct tagUartDriver
+{
+    Uart_t *pstUart;
+    PinNames enPinTx;
+    PinNames enPinRx;
+}UART_DRIVER_S;
+
+static UART_DRIVER_S *g_astUartList[UART_MAX] = {NULL, };
+
+void *UartRegister( Uart_t *pstUart, UartId_t enUartId, PinNames enPinTx, PinNames enPinRx )
+{
+    UART_DRIVER_S *pstUartDriver = NULL;
+
+    if (g_astUartList[enUartId] == NULL)
+    {
+        pstUartDriver = (UART_DRIVER_S *)malloc(sizeof(UART_DRIVER_S));
+        if (pstUartDriver != NULL)
+        {
+            g_astUartList[enUartId] = pstUartDriver;
+            g_astUartList[enUartId]->pstUart = pstUart;
+            g_astUartList[enUartId]->enPinRx = enPinRx;
+            g_astUartList[enUartId]->enPinTx = enPinTx;
+        }
+    }
+
+    return (void *)pstUartDriver;
+}
+
+void UartDeRegister(UartId_t enUartId)
+{
+    if (g_astUartList[enUartId] != NULL)
+    {
+        if (g_astUartList[enUartId]->pstUart != NULL)
+        {
+            UartDeInit(g_astUartList[enUartId]->pstUart);
+        }
+        
+        free(g_astUartList[enUartId]);
+    }
+
+    return;
+}
+
+Uart_t *UartOpen(UartId_t enUartId, UartMode_t mode, uint32_t baudrate, 
+                    WordLength_t wordLength, StopBits_t stopBits, 
+                    Parity_t parity, FlowCtrl_t flowCtrl)
+{
+    Uart_t *pstUart = NULL;
+    UART_DRIVER_S *pstUartDriver = g_astUartList[enUartId];
+    
+    if (pstUartDriver != NULL)
+    {
+        pstUart = pstUartDriver->pstUart;
+        if (pstUart != NULL)
+        {
+            UartInit(pstUart, enUartId, pstUartDriver->enPinTx, pstUartDriver->enPinRx);
+
+            UartConfig(pstUart, mode, baudrate, wordLength, stopBits, parity, flowCtrl);
+        }
+    }
+    
+    return pstUart;
+}
+
+void UartClose(Uart_t *pstUart)
+{
+    if (pstUart != NULL)
+    {
+        FifoFlush(&(pstUart->FifoRx));
+        FifoFlush(&(pstUart->FifoTx));
+        
+        UartDeInit(pstUart);
+    }
+    return;
+}
+/*======================== end  ===============================*/
+

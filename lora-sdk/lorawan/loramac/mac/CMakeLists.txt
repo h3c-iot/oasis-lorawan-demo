@@ -1,6 +1,6 @@
 ##################################################################################
 ##
-## Copyright (C) 2019, New H3C Technologies Co., Ltd. All rights reserved.
+## Copyright (C) 2019, New H3C Technologies Co., Ltd.
 ##
 ##      License: Revised BSD License, see LICENSE.TXT file included in the project
 ## Data Created: 2019/10/9
@@ -113,7 +113,7 @@ endforeach()
 target_include_directories( ${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/region
-	${CMAKE_CURRENT_SOURCE_DIR}/../../system
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../system
 	${CMAKE_CURRENT_SOURCE_DIR}/../radio
 )
 

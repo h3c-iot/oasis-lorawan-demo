@@ -1,6 +1,6 @@
 ##################################################################################
 ##
-## Copyright (C) 2019, New H3C Technologies Co., Ltd. All rights reserved.
+## Copyright (C) 2019, New H3C Technologies Co., Ltd.
 ##
 ##      License: Revised BSD License, see LICENSE.TXT file included in the project
 ## Data Created: 2019/10/9
@@ -26,9 +26,9 @@ target_include_directories( ${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/common/LmHandler/packages
 	${CMAKE_CURRENT_SOURCE_DIR}/../system
 	${CMAKE_CURRENT_SOURCE_DIR}/../include
-	${CMAKE_CURRENT_SOURCE_DIR}/../loramac/mac
-	${CMAKE_CURRENT_SOURCE_DIR}/../loramac/mac/region
-	${CMAKE_CURRENT_SOURCE_DIR}/../loramac/radio
+	${CMAKE_CURRENT_SOURCE_DIR}/../lorawan/loramac/mac
+	${CMAKE_CURRENT_SOURCE_DIR}/../lorawan/loramac/mac/region
+	${CMAKE_CURRENT_SOURCE_DIR}/../lorawan/loramac/radio
 )
 
 target_compile_definitions(${PROJECT_NAME}  PUBLIC
