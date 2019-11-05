@@ -23,6 +23,7 @@
 
 
 #include <stdio.h>
+#include <string.h>
 #include "utilities.h"
 #include "board.h"
 #include "gpio.h"
@@ -34,8 +35,9 @@
 /*!
  * Defines the application data transmission duty cycle. 5s, value in [ms].
  */
-#define APP_TX_DUTYCYCLE                            5000
+#define APP_TX_DUTYCYCLE                            60000
 
+#define THIS_IS(para)   1
 
 /*!
  * LoRaWAN application port
@@ -73,11 +75,10 @@ static TimerEvent_t TxNextPacketTimer;
  * Indicates if a new packet can be sent
  */
 static bool NextTx = true;
-static bool g_bJoining = false;
+static bool g_bJoined = false;
 
-static uint8_t g_ucGrp = 1;
-static uint8_t g_ucChannelRetry = 0;
-static uint8_t g_ucGrpRetry = 0;
+static uint8_t g_bSending = false;
+static bool g_bConfirm = false;
 
 /*!
  * Prints the provided buffer in HEX
@@ -107,11 +108,20 @@ static void PrintHexBuffer( uint8_t *buffer, uint8_t size )
     printf( "\r\n" );
 }
 
+/*************************** Join Function**************************/
 
+#if THIS_IS("LORA_JOIN")
+typedef void ( *LORA_JOINProcess_PF )( bool bJoined);
 
-/***************************Function**************************/
+static bool g_bJoining = false;
 
-static void LoRaJoinStart(uint8_t ucChnlGrp)
+static uint8_t g_ucGrp = 1;
+static uint8_t g_ucChannelRetry = 0;
+static uint8_t g_ucGrpRetry = 0;
+
+LORA_JOINProcess_PF g_pfJoinProcess = NULL;
+
+static void LoRaJoinStart(uint8_t ucChnlGrp, LORA_JOINProcess_PF pfLoRaJoinProcess)
 {
     if (g_bJoining == true)
     {
@@ -121,10 +131,8 @@ static void LoRaJoinStart(uint8_t ucChnlGrp)
     (void)LADAPTER_SetJoinChannelGroup(ucChnlGrp);
     g_ucGrp = ucChnlGrp;
     g_ucChannelRetry = 0;
-    
-#if( OVER_THE_AIR_ACTIVATION == 0 ) /* ABP */
-    LADAPTER_SetNetwork(LADAPTER_NWKTYPE_ABP);
-#else /* OTAA */
+    g_pfJoinProcess = pfLoRaJoinProcess;
+   
 
 #if defined( LORA_MODULE_WSL30X )
     LADAPTER_SetNetwork(LADAPTER_NWKTYPE_OTAA);
@@ -134,8 +142,6 @@ static void LoRaJoinStart(uint8_t ucChnlGrp)
     {
         g_bJoining = true;
     }
-    
-#endif
 
     return;
 }
@@ -148,6 +154,10 @@ static void LoRaJoinChannelSurvey(uint8_t ucJoinResult)
     {
         LADAPTER_SetWorkChannelGroup(g_ucGrp);
         g_bJoining = false;
+        if (g_pfJoinProcess != NULL)
+        {
+            g_pfJoinProcess(true);
+        }
     }
     else
     {
@@ -179,17 +189,115 @@ static void LoRaJoinChannelSurvey(uint8_t ucJoinResult)
 #if !defined( LORA_MODULE_WSL30X )
             (void)LADAPTER_Join( );
 #endif 
-            g_bJoining = true;          
+            g_bJoining = true;
         }
         else
         {
             g_bJoining = false;
+            if (g_pfJoinProcess != NULL)
+            {
+                g_pfJoinProcess(false);
+            }
         }
     }
 
     return;
 }
 
+
+/*************************** Join END**************************/
+#endif
+
+#if THIS_IS("LORA_SEND")
+
+#define LORA_MAX_CACHE_LEN   10
+#define LORA_MAX_DATA_LEN    255
+
+typedef struct tagPKTNode
+{
+    uint8_t ucFPort;
+    bool bConfirm;
+    uint8_t ucLen;
+    char aucData[LORA_MAX_DATA_LEN];
+}PKT_NODE_S;
+
+typedef struct tagPKTCache
+{
+    uint8_t ucIn;
+    uint8_t ucOut;
+    PKT_NODE_S astDataList[LORA_MAX_CACHE_LEN];
+}PKT_CACHE_S;
+
+static PKT_CACHE_S g_stPktCache = {0};
+
+static void LoRaTriggerSend(void)
+{
+    PKT_NODE_S *pstNode = NULL;
+
+    if ((g_bSending == false) && (g_stPktCache.ucIn != g_stPktCache.ucOut))
+    {
+        pstNode = &g_stPktCache.astDataList[g_stPktCache.ucOut];
+        if (LADAPTER_SUCCES == LADAPTER_Send((LADAPTER_PKTSTYPE_E)pstNode->bConfirm, pstNode->ucFPort, 
+                                            pstNode->aucData, pstNode->ucLen))
+        {
+            g_bSending = true;
+        }
+    }
+    return;
+}
+
+static int8_t LoRaSendPkt(bool bConfirm, uint8_t ucFPort, char *pcData, uint8_t ucLen)
+{
+    PKT_NODE_S *pstNode = NULL;
+    uint8_t ucIndex = 0;
+    
+    if (((g_stPktCache.ucIn + 1) % LORA_MAX_CACHE_LEN) == g_stPktCache.ucOut)
+    {
+        /* buffer is full */
+        return -1;
+    }
+
+    pstNode = &g_stPktCache.astDataList[g_stPktCache.ucIn];
+    pstNode->bConfirm = bConfirm;
+    pstNode->ucLen = ucLen;
+    pstNode->ucFPort = ucFPort;
+    memcpy(pstNode->aucData, pcData, ucLen);
+    
+    LoRaTriggerSend();
+
+    ucIndex = g_stPktCache.ucIn;
+    g_stPktCache.ucIn = (g_stPktCache.ucIn + 1) % LORA_MAX_CACHE_LEN;
+
+    return ucIndex;
+}
+
+static void LoRaReceiveFPending(bool bFPending)
+{
+    char aucData[8] = {0x00, };
+    
+    if (g_stPktCache.ucIn == g_stPktCache.ucOut)
+    {
+        LoRaSendPkt(false, 3, aucData, 1);
+    }
+    
+    return;
+}
+
+static void LoRaMcpsConfirm(bool bConfirmePkt, uint8_t ucResult)
+{
+    if ((ucResult == LADAPTER_SUCCES) && (g_stPktCache.ucIn != g_stPktCache.ucOut))
+    {
+        printf("receive packet confirm, pkt index=%d\r\n", g_stPktCache.ucOut);
+        memset(&g_stPktCache.astDataList[g_stPktCache.ucOut], 0, sizeof(PKT_NODE_S));
+        g_stPktCache.ucOut = (g_stPktCache.ucOut + 1) % LORA_MAX_CACHE_LEN;
+    }
+
+    g_bSending = false;
+
+    return;
+}
+
+#endif
 
 static void SetNetConfig(void)
 {
@@ -252,27 +360,7 @@ static void SetNetConfig(void)
     return;
 }
 
-/*!
- * \brief Function executed on TxNextPacket Timeout event
- */
-static void OnTxNextPktTimerEvent( void* context )
-{    
-    TimerStop( &TxNextPacketTimer );
-
-    if (true != LADAPTER_IsNetworkJoined())
-    {
-        // Network not joined yet. Try to join again
-        LoRaJoinStart(1);
-    }
-    else
-    {
-        LADAPTER_Send(MCPS_UNCONFIRMED, LORAWAN_APP_PORT128, "123", 1);
-        NextTx = true;
-    }
-    return;
-}
-
-static void processPort128FRMPkt( char *pcData, uint8_t ucDataLen, bool bFPending )
+static void processPort128FRMPkt( char *pcData, uint8_t ucDataLen)
 {
     printf( "RX PORT     : %d\r\n", LORAWAN_APP_PORT128 );
 
@@ -281,8 +369,55 @@ static void processPort128FRMPkt( char *pcData, uint8_t ucDataLen, bool bFPendin
         printf( "RX DATA     : \r\n" );
         PrintHexBuffer( (uint8_t *)pcData, ucDataLen );
     }
-    printf( "FPending    : %d\r\n", bFPending );
+
+    if (ucDataLen > 0)
+    {
+        switch (*pcData)
+        {
+            case 0x00:
+                g_bConfirm = false;
+                break;
+            case 0x01:
+                g_bConfirm = true;
+                break;
+            case 0x02:
+                LoRaSendPkt(g_bConfirm, LORAWAN_APP_PORT128, pcData+1, ucDataLen-1);
+                break;
+            default:
+                break;
+        }
+    }
+    return;
 }
+
+static void OnJoinProcess( bool bJoined)
+{
+    g_bJoined = bJoined;
+}
+
+/*!
+ * \brief Function executed on TxNextPacket Timeout event
+ */
+static void OnTxNextPktTimerEvent( void* context )
+{    
+    char aucData[8] = {0x00, };
+    
+    TimerStop( &TxNextPacketTimer );
+
+    if (true == g_bJoined)
+    {
+        LoRaSendPkt(false, 3, aucData, 1);
+    }
+    else
+    {
+        LoRaJoinStart(1, OnJoinProcess);
+    }
+
+    NextTx = true;
+    
+    return;
+}
+
 
 /**
  * Main application entry point.
@@ -297,6 +432,8 @@ int main( void )
     DelayMs(5000);
     // Handler CallBack Init
     stHandler.pfLAdapter_JoinServer = LoRaJoinChannelSurvey;
+    stHandler.pfLAdapter_ReceiveFPending = LoRaReceiveFPending;
+    stHandler.pfLAdapter_McpsConfirm = LoRaMcpsConfirm;
     stHandler.pfLAdapter_BoardGetBatteryLevel = NULL;
     stHandler.pfLAdapter_OnMacProcessNotify = NULL;
     stHandler.pfLAdapter_GetTemperatureLevel = NULL;
@@ -310,8 +447,13 @@ int main( void )
     // Tx Timer Init
     TimerInit( &TxNextPacketTimer, OnTxNextPktTimerEvent );
 
+#if( OVER_THE_AIR_ACTIVATION == 0 ) /* ABP */
+    LADAPTER_SetNetwork(LADAPTER_NWKTYPE_ABP);
+    g_bJoined = true;
+#else /* OTAA */
     // LoRa Net Start
-    LoRaJoinStart(1);
+    LoRaJoinStart(1, OnJoinProcess);
+#endif
 
     while( 1 )
     {
@@ -329,6 +471,11 @@ int main( void )
             TimerSetValue( &TxNextPacketTimer, APP_TX_DUTYCYCLE );
             TimerStart( &TxNextPacketTimer );
             NextTx = false;
+        }
+
+        if (g_bJoined == true)
+        {
+            LoRaTriggerSend();
         }
     }
 }

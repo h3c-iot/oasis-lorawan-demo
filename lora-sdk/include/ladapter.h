@@ -76,11 +76,13 @@ typedef enum tagLAdaterWorkMode
 }LADAPTER_CLASS_E;
 
 
-typedef void ( *LADAPTER_ProcessFRMPkt_PF )( char *pcData, uint8_t ucDataLen, bool bFPending );
+typedef void ( *LADAPTER_ProcessFRMPkt_PF )( char *pcData, uint8_t ucDataLen);
 
 typedef struct tagLAdapterHandler
 {
     void ( *pfLAdapter_JoinServer )(uint8_t ucJoinResult);
+    void ( *pfLAdapter_ReceiveFPending )(bool bFPending);
+    void ( *pfLAdapter_McpsConfirm )(bool bConfirmePkt, uint8_t ucResult);
     float ( *pfLAdapter_GetTemperatureLevel)(void);
     uint8_t ( *pfLAdapter_BoardGetBatteryLevel)( void );
     void ( *pfLAdapter_OnMacProcessNotify)( void );

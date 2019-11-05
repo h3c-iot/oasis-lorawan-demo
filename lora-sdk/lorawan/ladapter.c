@@ -49,34 +49,22 @@ LADAPTER_HANDLER_S g_stLoraAdpHandler = {NULL,};
  */
 static void McpsConfirm( McpsConfirm_t *pstMcpsConfirm )
 {
+    uint8_t ucRet = LADAPTER_SUCCES;
+    bool bConfirm = false;
+    
     if( pstMcpsConfirm->Status != LORAMAC_EVENT_INFO_STATUS_OK )
     {
+        ucRet = LADAPTER_FAILED;
     }
-    else
+
+    if ( pstMcpsConfirm->McpsRequest == MCPS_CONFIRMED )
     {
-        switch( pstMcpsConfirm->McpsRequest )
-        {
-            case MCPS_UNCONFIRMED:
-            {
-                // Check Datarate
-                // Check TxPower
-                break;
-            }
-            case MCPS_CONFIRMED:
-            {
-                // Check Datarate
-                // Check TxPower
-                // Check AckReceived
-                // Check NbTrials
-                break;
-            }
-            case MCPS_PROPRIETARY:
-            {
-                break;
-            }
-            default:
-                break;
-        }
+        bConfirm = true;
+    }
+
+    if(g_stLoraAdpHandler.pfLAdapter_McpsConfirm != NULL)
+    {
+        g_stLoraAdpHandler.pfLAdapter_McpsConfirm(bConfirm, ucRet);
     }
     
     return;
@@ -123,8 +111,12 @@ static void McpsIndication( McpsIndication_t *pstMcpsIndication )
         (g_apfFRMPayloadHandler[pstMcpsIndication->Port] != NULL))
     {
         g_apfFRMPayloadHandler[pstMcpsIndication->Port]((char *)pstMcpsIndication->Buffer,
-                                                       pstMcpsIndication->BufferSize,
-                                                       (bool)pstMcpsIndication->FramePending);
+                                                       pstMcpsIndication->BufferSize);
+    }
+
+    if(g_stLoraAdpHandler.pfLAdapter_ReceiveFPending != NULL)
+    {
+        g_stLoraAdpHandler.pfLAdapter_ReceiveFPending((bool)pstMcpsIndication->FramePending);
     }
 
     return;
@@ -194,6 +186,18 @@ static void MlmeIndication( MlmeIndication_t *pstMlmeIndication )
 
 static void Wsl305sMcpsConfirm( bool bConfirmePkt, uint8_t ucResult )
 {
+    uint8_t ucRet = LADAPTER_SUCCES;
+    
+    if( ucResult != AT_CMD_SUCCESS )
+    {
+        ucRet = LADAPTER_FAILED;
+    }
+
+    if(g_stLoraAdpHandler.pfLAdapter_McpsConfirm != NULL)
+    {
+        g_stLoraAdpHandler.pfLAdapter_McpsConfirm(bConfirmePkt, ucRet);
+    }
+    
     return;
 }
 
@@ -202,7 +206,12 @@ static void Wsl305sMcpsIndication( bool bFPending, uint8_t ucFPort, char *pcData
     if( (ucFPort > 0) &&
         (g_apfFRMPayloadHandler[ucFPort] != NULL))
     {
-        g_apfFRMPayloadHandler[ucFPort](pcData, ucRecvLen, bFPending);
+        g_apfFRMPayloadHandler[ucFPort](pcData, ucRecvLen);
+    }
+
+    if(g_stLoraAdpHandler.pfLAdapter_ReceiveFPending != NULL)
+    {
+        g_stLoraAdpHandler.pfLAdapter_ReceiveFPending(bFPending);
     }
 
     return;
@@ -262,7 +271,7 @@ uint8_t LADAPTER_SetAPPKey(uint8_t *pucAppKey)
     uint8_t ucRet = LADAPTER_SUCCES;
     
 #if defined( LORA_MODULE_WSL30X )
-    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_APPKEY_SET, (char *)pucAppKey))
+    if (AT_CMD_SUCCESS != WSL305S_AT_SetAppKey((char *)pucAppKey))
     {
         ucRet = LADAPTER_FAILED;
     }
@@ -362,7 +371,7 @@ uint8_t LADAPTER_SetJoinEUI(uint8_t *pucJoinEUI)
     uint8_t ucRet = LADAPTER_SUCCES;
     
 #if defined( LORA_MODULE_WSL30X )
-    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_APPEUI_SET, (char *)pucJoinEUI))
+    if (AT_CMD_SUCCESS != WSL305S_AT_SetAppEUI((char *)pucJoinEUI))
     {
         ucRet = LADAPTER_FAILED;
     }
@@ -381,7 +390,7 @@ uint8_t LADAPTER_SetDevEUI(uint8_t *pucDevEUI)
     uint8_t ucRet = LADAPTER_SUCCES;
     
 #if defined( LORA_MODULE_WSL30X )
-    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_DEUI_SET, (char *)pucDevEUI))
+    if (AT_CMD_SUCCESS != WSL305S_AT_SetDevEUI((char *)pucDevEUI))
     {
         ucRet = LADAPTER_FAILED;
     }
@@ -462,10 +471,10 @@ uint8_t LADAPTER_SetClassMode(LADAPTER_CLASS_E enClass)
     uint8_t ucRet = LADAPTER_SUCCES;
     
 #if defined( LORA_MODULE_WSL30X )
-    char ucClass = 'A';
+    char auCmdData[2] = {'A', 0};
 
-    ucClass = ucClass + (uint8_t)enClass;
-    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_CLASS_SET, &ucClass))
+    auCmdData[0] = auCmdData[0] + (uint8_t)enClass;
+    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_CLASS_SET, auCmdData))
     {
         ucRet = LADAPTER_FAILED;
     }
@@ -484,7 +493,13 @@ uint8_t LADAPTER_SetADR(bool bAdrON)
     uint8_t ucRet = LADAPTER_SUCCES;
     
 #if defined( LORA_MODULE_WSL30X )
-    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_ADR_SET, (char *)&bAdrON))
+    char auCmdData[2] = {'0', 0};
+
+    if(true == bAdrON)
+    {
+        auCmdData[0] = '1';
+    }
+    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_ADR_SET, auCmdData))
     {
         ucRet = LADAPTER_FAILED;
     }
@@ -503,10 +518,11 @@ uint8_t LADAPTER_SetDR(LADAPTER_DR_E enDR)
     uint8_t ucRet = LADAPTER_SUCCES;
     
 #if defined( LORA_MODULE_WSL30X )
-    char ucDR = '0';
+    char auCmdData[2] = {0};
 
-    ucDR = ucDR + enDR;
-    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_DR_SET, &ucDR))
+    auCmdData[0] = '0';
+    auCmdData[0] = auCmdData[0] + enDR;
+    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_DR_SET, auCmdData))
     {
         ucRet = LADAPTER_FAILED;
     }
@@ -550,10 +566,11 @@ uint8_t LADAPTER_SetTxPower(LADAPTER_PWRLEVEL_E enPowerLevel)
     uint8_t ucRet = LADAPTER_SUCCES;
     
 #if defined( LORA_MODULE_WSL30X )
-    char ucPwrLevel = '0';
+    char auCmdData[2] = {0};
 
-    ucPwrLevel = ucPwrLevel + (uint8_t)enPowerLevel;
-    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_TXP_SET, &ucPwrLevel))
+    auCmdData[0] = '0';
+    auCmdData[0] = auCmdData[0] + (uint8_t)enPowerLevel;
+    if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(AT_TXP_SET, auCmdData))
     {
         ucRet = LADAPTER_FAILED;
     }
@@ -605,6 +622,11 @@ uint8_t LADAPTER_SetWorkChannelGroup(uint8_t ucChnlGrp)
 {
     uint8_t ucRet = LADAPTER_SUCCES;
     
+    //Only CN470 surpport 
+    if ((ucChnlGrp > 12) || (ucChnlGrp == 0))
+    {
+        return LADAPTER_FAILED;
+    }    
 #if defined( LORA_MODULE_WSL30X )
     if ( AT_CMD_SUCCESS != WSL305S_AT_SetChannelGroup(ucChnlGrp))
     {
