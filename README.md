@@ -6,26 +6,30 @@ SDK基于LoRaMAC-node4.4.2[https://github.com/Lora-net/LoRaMac-node]开发, 扩�
 
 ### 支持的开发板
 
-** NucleoL073 ** 
+* NucleoL073 
 
 ### 支持的频段
 
-** CN470-510MHz **
+* CN470-510MHz
 
 ### 应用案例
 
-** newClassA **
+* newClassA 
+
 根据SDK提供的classA 案例代码, 提供信道探测入网, 数据收发, 设备保活等功能
 
-** FwUpdate **
+* FwUpdate 
+
 基于本地串口, 使用xmodel协议对光宝WSL305模组进行升级的案例
 
 ### 支持的模组
 
-** WSL305S **
+* WSL305S 
+
 光宝WSL305S(L)模组是基于AT指令控制的lora模组
 
-** AcsipS78F **
+* AcsipS78F 
+
 群登S78F是基于SPI控制的lora模组
 
 ## 后续计划
@@ -43,9 +47,12 @@ SDK基于LoRaMAC-node4.4.2[https://github.com/Lora-net/LoRaMac-node]开发, 扩�
 
 ### 2019-11-08, V1.0.0
   1. 提供LADAPTER框架适配底层SPI和AT控制模组
-  2、提供基于SDK的class A案例
-  3、提供信道探测入网案例
-  4、提供光宝wsl305s模组升级功能以及案例
+  
+  2. 提供基于SDK的class A案例
+  
+  3. 提供信道探测入网案例
+  
+  4. 提供光宝wsl305s模组升级功能以及案例
 
 
 
