@@ -1,25 +1,31 @@
-/*******************************************************************************
-*                                                                              *
-*                Copyright (C) 2019, New H3C Technologies Co., Ltd.            *
-*  License: Revised BSD License, see LICENSE.TXT file included in the project  *
-*                                                                              *
-*------------------------------------------------------------------------------*
-*                                                                              *
-*                              loramac_at.c                                      *
-*                                                                              *
-*  Project Code: oasis-sdk                                                     *
-*   Module Name: lora adapt                                                    *
-*  Date Created: 2019-10-26                                                    *
-*        Author: wangzhen                                                       *
-*   Description:                                                                    *
-*                                                                              *
+/**
+* @file        loramac_vat.c
+*
+* @copyright   Copyright (C) 2019, New H3C Technologies Co., Ltd.            
+*              License: Revised BSD License 
+*              ,see LICENSE.TXT file included in the project.
+*
+* @brief       lora mac virtual mac command
+*                                                                                   
+* @code        
+*                          Author : wangzhen
+*
+*                          Project Code: oasis-sdk
+*
+*                          Module Name: Mac Virtual Command
+*
+*                          Date Created: 2019-10-26                           
+*                                                                                                                                  *
 *------------------------------------------------------------------------------*
 *  Modification History                                                        *
-*  DATE        NAME             DESCRIPTION                                    *
-*  ----------------------------------------------------------------------------*
+*  DATE              NAME                  DESCRIPTION                         *
+*------------------------------------------------------------------------------*
 *  YYYY-MM-DD                                                                  *
-*                                                                              *
-*******************************************************************************/
+*------------------------------------------------------------------------------*                                                                             
+* @endcode   
+*
+*/
+
 #include "LoRaMac.h"
 
 #ifndef ACTIVE_REGION
@@ -30,11 +36,15 @@
 
 #endif
 
-
+/**　静态全局Mac层回调函数保存的结构体 */
 static LoRaMacCallback_t g_stMacCallbacks = {NULL};
+
+/**　静态全局通知上层应用处理Mac事件回调函数保存的结构体 */
 static LoRaMacPrimitives_t g_stMacPrimitives = {NULL};
 
+/**　Mcp发送速率全局变量 */
 static uint8_t g_ucDR = DR_0;
+
 
 bool LORAMAC_VAT_IsNetworkJoined(void)
 {
@@ -64,6 +74,7 @@ LoRaMacStatus_t LORAMAC_VAT_SetABPVersion(uint32_t uiABPVersion)
 
     return enStatus;
 }
+
 
 LoRaMacStatus_t LORAMAC_VAT_SetNetwork(ActivationType_t enActionType)
 {
@@ -251,7 +262,6 @@ LoRaMacStatus_t LORAMAC_VAT_SetRX1Delay(uint8_t ucRx1Delay)
     return enStatus;
 }
 
-
 LoRaMacStatus_t LORAMAC_VAT_SetTxPower(uint8_t ucTxPower)
 {
     MibRequestConfirm_t stMibReq;
@@ -297,7 +307,6 @@ LoRaMacStatus_t LORAMAC_VAT_SetWorkChannelGroup(uint8_t ucChnlGrp)
     return enStatus;
 }
 
-
 LoRaMacStatus_t LORAMAC_VAT_Send(bool bConfirm, uint8_t ucFPort, 
                                 char *pData, uint8_t ucDataSize)
 {
@@ -332,10 +341,6 @@ LoRaMacStatus_t LORAMAC_VAT_Send(bool bConfirm, uint8_t ucFPort,
     return enStatus;
 }
 
-
-/*!
- * Executes the network Join request
- */
 LoRaMacStatus_t LORAMAC_VAT_Join( void )
 {
     LoRaMacStatus_t enStatus = LORAMAC_STATUS_OK;
@@ -353,11 +358,6 @@ LoRaMacStatus_t LORAMAC_VAT_Join( void )
     return enStatus;
 }
 
-/*
- * \brief   
- *
- * \param   [IN] pstHander - Pointer to the handler structure.
- */
 void LORAMAC_VAT_Init(LoRaMacCallback_t *pstMacCallbacks, LoRaMacPrimitives_t *pstMacPrimitives)
 {
     MibRequestConfirm_t stMibReq;

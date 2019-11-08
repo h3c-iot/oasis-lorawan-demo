@@ -29,21 +29,37 @@
 #include "delay.h"
 #include "wsl305s.h"
 #include "timer.h"
+#include "debug.h"
 
+
+/**
+  *串口全局指针变量
+  */
 static Uart_t *g_pstUartSerial = NULL;
 
-#define FQ_GRP_NUM                  8                           /* 每组信道的信道数 */
-#define AT_CMDLEN_MAX               128                        /* AT指令发送缓存 */
+/** 每组信道的信道数 */
+#define FQ_GRP_NUM                  8  
 
-/* KEY 定义 */                
-#define ENTER_KEY                   0x0D                        /* ENTER按键 ASCII码*/
-#define RETURN_KEY                  0x0A                        /* 回车按键 ASCII码*/
+/** AT指令发送缓存 */
+#define AT_CMDLEN_MAX               128                        
 
-#define WSL305S_FQ_STR_LENTH        9                           /* 信道频率字符串长度 */
+/*8 KEY 定义 */                
+#define ENTER_KEY                   0x0D                       
+#define RETURN_KEY                  0x0A                       
+
+/** 信道频率字符串长度 */
+#define WSL305S_FQ_STR_LENTH        9
+
+/** 信道频率指令长度 */
 #define WSL305S_TXFQ_CMD_LEN        10
-#define WSL305S_CN470_FREQ_START    470300000U       /* 0号信道频率 */
+
+/** 0号信道频率 */
+#define WSL305S_CN470_FREQ_START    470300000U 
+
+/** 信道带宽 */
 #define WSL305S_LORA_BANDWIDTH      200000U
 
+/** 数据缓存长度       */
 #define WSL305S_MAX_DATA_LEN        242
 #define WSL305S_MAX_ATCMD_LEN       20
 #define WSL305S_MAX_SENDB_LEN       ((WSL305S_MAX_DATA_LEN * 2) + 4)
@@ -53,15 +69,46 @@ static Uart_t *g_pstUartSerial = NULL;
 #define HEX_LEN_16                  16
 #define HEX_LEN_8                   8
 
+/**
+ *下发Confirm报文标志位
+*/
 bool g_bConfirm = false;
+
+/**
+ *Confirm报文确认标志位
+*/
 bool g_bPktConfirmed = true;
+
+/**
+ *接收Unconfirm报文确认标志位
+*/
 bool g_bUnconfirmSend = false;
+
+/**
+ *入网成功标志位
+*/
 bool g_bJoined = false;
+
+/**
+ *模组数据接收接收延迟默认值
+*/
 uint8_t g_ucRx1Delay = 1;
+
+/**
+ *模组相关回调数组
+*/
 WSL305S_CALLBACK_S g_stHandler = {NULL, };
+
+/**
+ *confirm报文报文响应定时器
+*/
 static TimerEvent_t g_stConfirmTimer;
 
 
+/**
+ *confirm报文报文响应定时超时事件处理
+ *@param[in]      context  
+*/
 static void wsl305s_OnConfirmTimerEvent( void* context )
 {
     TimerStop( &g_stConfirmTimer );
@@ -75,6 +122,13 @@ static void wsl305s_OnConfirmTimerEvent( void* context )
     return;
 }
 
+
+/**
+ *判断数据是否为十六进制格式
+ *@param[in]      ucData    需要判断的数据
+ *@retval         true      表示数据为16进制数据
+ *@retval         false     表示数据不为16进制数据
+*/
 static bool wsl305s_IsHexFormat(uint8_t ucData)
 {
     bool bHex = false;
@@ -89,6 +143,14 @@ static bool wsl305s_IsHexFormat(uint8_t ucData)
     return bHex;
 }
 
+
+/**
+ *模组AT指令发送
+ *@param[in]      pucATCmd              AT指令部分字符串指针
+ *@param[in]      pucData               AT指令参数部分字符串指针
+ *@retval         AT_CMD_SUCCESS        表示指令发送成功
+ *@retval         AT_CMD_FAILUE         表示指令发送失败
+*/
 static uint8_t wsl305s_SendATCMD(const char *pucATCmd,
                                       char *pucData)
 {
@@ -117,7 +179,7 @@ static uint8_t wsl305s_SendATCMD(const char *pucATCmd,
     aucTxBuffer[ucTxIndex++] = ENTER_KEY;                                   /* 结尾加上ENTER键 */
     aucTxBuffer[ucTxIndex++] = RETURN_KEY;                                  /* 结尾加上RETURN_KEY键 */
     aucTxBuffer[ucTxIndex] = 0;
-    printf("aucTxBuffer ==> %s",aucTxBuffer);
+    DEBUG_PRINT("aucTxBuffer ==> %s",aucTxBuffer);
     if (0 != UartPutBuffer(g_pstUartSerial, (uint8_t *)aucTxBuffer, ucTxIndex))
     {
         ucRet = AT_CMD_FAILUE;
@@ -126,6 +188,13 @@ static uint8_t wsl305s_SendATCMD(const char *pucATCmd,
     return ucRet;
 }
 
+
+/**
+ *模组AT指令响应数据接收
+ *@param[in]      pucGetData        接收数据缓存指针
+ *@param[in]      usBufferLen       接收数据缓存长度
+ *@retval         usRxDataLen       返回接收数据长度
+*/
 static uint16_t wsl305s_RecvUart(char *pucGetData, uint16_t usBufferLen)
 {
     uint16_t usRxDataLen = 0;
@@ -140,7 +209,13 @@ static uint16_t wsl305s_RecvUart(char *pucGetData, uint16_t usBufferLen)
     return usRxDataLen;
 }
 
-/* 在特定端口上发送字符串数据 */
+
+/**
+ *通过AT指令在特定端口上发送字符串数据
+ *@param[in]      pucData               发送数据字符串指针
+ *@retval         AT_CMD_SUCCESS        表示发送成功
+ *@retval         AT_CMD_FAILUE         表示发送失败
+*/
 static uint8_t wsl305s_SendData(char *pucData)
 {
     uint8_t ucRet = AT_CMD_FAILUE;
@@ -154,6 +229,13 @@ static uint8_t wsl305s_SendData(char *pucData)
     return ucRet;
 }
 
+
+/**
+ *将数组转换为模组AT指令字符串参数格式
+ *@param[in]      szArrData               转换后字符串指针
+ *@param[in]      pucPreArr               待转换数组指针
+ *@param[in]      uc8ArrLen               待转换数组字节数
+*/
 static void  wsl305s_Arr2Str(char *szArrData, char *pucPreArr, uint8_t uc8ArrLen)
 {
     for (int i = 0; i < uc8ArrLen; i++)
@@ -166,7 +248,13 @@ static void  wsl305s_Arr2Str(char *szArrData, char *pucPreArr, uint8_t uc8ArrLen
 }
 
 
-/* 设置指令 */
+/**
+ *AT设置指令
+ *@param[in]      pucATCMD               AT设置指令部分字符串指针
+ *@param[in]      pucValue               AT设置参数部分字符串指针
+ *@retval         AT_CMD_SUCCESS         表示指令执行成功
+ *@retval         AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetATCMD(const char *pucATCMD ,char *pucValue)
 {
     char aucCmdData[AT_CMDLEN_MAX + 1] = "";
@@ -174,25 +262,25 @@ uint8_t WSL305S_AT_SetATCMD(const char *pucATCMD ,char *pucValue)
     uint8_t ucRecvLen = 0;
 
     WSL305S_AT_OpenUart();
-    DelayMs(10);
+    DelayMs(5);
 
     /* 发送DevEUI设置指令 */
     if (AT_CMD_SUCCESS == wsl305s_SendATCMD(pucATCMD, pucValue))
     {
-        DelayMs(100);
-        
+        DelayMs(100 + strlen(pucValue) / 30 * 60);
+
         ucRecvLen = wsl305s_RecvUart(aucCmdData, AT_CMDLEN_MAX);
         if (ucRecvLen != 0)
         {
             aucCmdData[ucRecvLen] = 0;
             if(strstr(aucCmdData, AT_STATUS_OK) != NULL)
             {
-                printf("Send Ok, Data:[%s%s]\r\n", pucATCMD, ((pucValue == NULL) ? "" : pucValue));
+                DEBUG_PRINT("Send Ok, Data:[%s%s]\r\n", pucATCMD, ((pucValue == NULL) ? "" : pucValue));
                 ucRet = AT_CMD_SUCCESS;
             }
             else
             {
-                printf("Send failed, Receive Data <==\r\n%s\r\n", aucCmdData);
+                DEBUG_PRINT("Send failed, Receive Data <==\r\n%s\r\n", aucCmdData);
             }
         }
     }
@@ -202,31 +290,69 @@ uint8_t WSL305S_AT_SetATCMD(const char *pucATCMD ,char *pucValue)
     return ucRet;
 }
 
-/* 查询参数指令 */
+
+/**
+ *AT查询参数指令
+ *@param[in]      pucATCMD               AT查询指令部分字符串指针
+ *@param[in]      pucRetValue            AT查询返回数据字符串指针
+ *@param[in]      usBuffLen              AT查询返回数据缓存区长度
+ *@retval         AT_CMD_SUCCESS         表示指令执行成功
+ *@retval         AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_GetATCMD(const char *pucATCMD, char *pucRetValue, uint16_t usBuffLen)
 {
     char aucCmdData[WSL305S_MAX_RX_LEN + 1] = {0};
     char *pucDataEnd = NULL;
+    char *pucDataStart = NULL;
     uint16_t usGetLen  = 0;
     uint16_t usRecvLen = 0;
     uint8_t ucRet = AT_CMD_FAILUE;
 
     WSL305S_AT_OpenUart();
-    DelayMs(10);
+    DelayMs(5);
 
     /* 发送DevEUI设置指令 */
     if (AT_CMD_SUCCESS == wsl305s_SendATCMD(pucATCMD, NULL))
     {
         DelayMs(200);
-        
+
         usRecvLen = wsl305s_RecvUart(aucCmdData, WSL305S_MAX_RX_LEN);
         if (usRecvLen != 0)
         {
             aucCmdData[usRecvLen] = 0;
             if (strstr(aucCmdData, AT_STATUS_OK) != NULL)
             {
-                printf("Send Ok, Data==>%s\r\nReceive Data<==\r\n%s\r\n", pucATCMD, aucCmdData);
-                
+                DEBUG_PRINT("Send Ok, Data==>%s\r\nReceive Data<==\r\n%s\r\n", pucATCMD, aucCmdData);
+
+                pucDataEnd = strstr(aucCmdData, "\r\nOK\r\n");
+                if (pucDataEnd != NULL)
+                {
+                    /* 跳过\r\n, 光宝模组每次Get操作都会有\r\n */
+                    pucDataEnd = pucDataEnd - 2;
+
+                    /* 从后往前逐个字符进行检测，直到遍历结束或遇到\r\n */
+                    pucDataStart = pucDataEnd - 1;
+                    while ((pucDataStart - aucCmdData) >= 0)
+                    {
+                        if ((*pucDataStart == '\r') || (*pucDataStart == '\n'))
+                        {
+                            break;
+                        }
+                        pucDataStart = pucDataStart - 1;
+                    }
+
+                    /* 指向需要获取的字符串的首字符位置*/
+                    pucDataStart = pucDataStart + 1;
+                    if ((pucDataStart >= aucCmdData) && (pucDataStart < pucDataEnd))
+                    {
+                        usGetLen = pucDataEnd - pucDataStart;
+                        memcpy(pucRetValue, pucDataStart, usGetLen);
+                        *(pucRetValue + usGetLen) = '\0';
+                        ucRet = AT_CMD_SUCCESS;
+                    }
+                }
+
+                /*
                 pucDataEnd = strstr(aucCmdData, "\r\n");
                 if (pucDataEnd != NULL)
                 {
@@ -238,11 +364,11 @@ uint8_t WSL305S_AT_GetATCMD(const char *pucATCMD, char *pucRetValue, uint16_t us
                         *(pucRetValue + usGetLen) = '\0';
                         ucRet = AT_CMD_SUCCESS;
                     }
-                }
+                }*/
             }
             else
             {
-                printf("Send failed, Receive Data<==\r\n%s\r\n", aucCmdData);
+                DEBUG_PRINT("Send failed, Receive Data<==\r\n%s\r\n", aucCmdData);
             }
         }
     }
@@ -253,10 +379,14 @@ uint8_t WSL305S_AT_GetATCMD(const char *pucATCMD, char *pucRetValue, uint16_t us
 }
 
 
-/* 模组复位重启 */
+/**
+ *AT指令模组复位重启
+ *@param[in]        无
+ *@note             该指令执行成功后，模组会软重启
+*/
 void WSL305S_AT_ResetModule(void)
 {
-    printf("@ATZ\r\n");
+    DEBUG_PRINT("@ATZ\r\n");
 
     WSL305S_AT_OpenUart();
     
@@ -270,7 +400,12 @@ void WSL305S_AT_ResetModule(void)
 }
 
 
-/* 设置发送某信道组的1-8信道的频率，FqGrpNum为 1-12 */
+/**
+ *设置发送某信道组的1-8信道的频率
+ *@param[in]      ucChnlGrp              信道组编号，取值为1-12
+ *@retval         AT_CMD_SUCCESS         表示指令执行成功
+ *@retval         AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetChannelGroup(uint8_t ucChnlGrp)
 {
     uint8_t  ucRet = AT_CMD_SUCCESS;
@@ -289,14 +424,13 @@ uint8_t WSL305S_AT_SetChannelGroup(uint8_t ucChnlGrp)
         AT_TX8FQ_SET
     };
 
-    printf("WSL305S_AT_SetChannelGroup\r\n");   
+    DEBUG_PRINT("WSL305S_AT_SetChannelGroup\r\n");   
 
     auiLoraTxFrq[0] = WSL305S_CN470_FREQ_START + WSL305S_LORA_BANDWIDTH * FQ_GRP_NUM * (ucChnlGrp - 1); 
     for(int i = 0; i < 8; i++)
     {
         auiLoraTxFrq[i] = auiLoraTxFrq[0] + WSL305S_LORA_BANDWIDTH * i; 
         sprintf(aucLoraFrqGrp[i], "%ld", auiLoraTxFrq[i]);
-//        FQ_NumtoStr(auiLoraTxFrq[i], (uint8_t *)(aucLoraFrqGrp[i]));
         if (AT_CMD_SUCCESS != WSL305S_AT_SetATCMD(aucATCmdTxFqGp[i], aucLoraFrqGrp[i]))
         {
             ucRet = AT_CMD_FAILUE;
@@ -308,31 +442,47 @@ uint8_t WSL305S_AT_SetChannelGroup(uint8_t ucChnlGrp)
 }
 
 
-/* 保存配置 */
+/**
+ *保存配置参数到模组flash中
+ *@param[in]        无
+ *@note             模组无返回信息
+*/
 uint8_t WSL305S_AT_SaveConfig(void)
 {
-    printf("WSL305S_AT_SaveConfig\r\n"); 
+    DEBUG_PRINT("WSL305S_AT_SaveConfig\r\n"); 
     
     /* 发送参数保存AT指令 */
     return WSL305S_AT_SetATCMD(AT_SAVE_RUN, NULL);
 }
 
-/* AT指令通信连接状态检查 */
+
+/**
+ *AT指令通信连接状态检查
+ *@param[in]                           无
+ *@retval       AT_CMD_SUCCESS         表示通信连接正常
+ *@retval       AT_CMD_FAILUE          表示通信连接失败
+*/
 uint8_t WSL305S_AT_CheckBoard(void)
 {
-    printf("WSL305S_AT_CheckBoard\r\n");
+    DEBUG_PRINT("WSL305S_AT_CheckBoard\r\n");
     
     /* 发送AT指令连接状态查询 */
     return WSL305S_AT_SetATCMD(AT_CONNECT_CHECK, NULL);
 }
 
-/* 判断是否入网成功 */
+
+/**
+ *判断是否入网成功
+ *@param[in]                 无
+ *@retval       true         表示模组入网成功
+ *@retval       false        表示模组入网不成功
+*/
 bool WSL305S_AT_IsNetworkJoined(void)
 {
     char aucCmdData[AT_CMDLEN_MAX] = {0};
     bool bJoined  = false;
 
-    printf("WSL305S_AT_IsNetworkJoined\r\n");
+    DEBUG_PRINT("WSL305S_AT_IsNetworkJoined\r\n");
     if ((AT_CMD_SUCCESS == WSL305S_AT_GetATCMD(AT_NJM_GET, aucCmdData, AT_CMDLEN_MAX)) && 
         (strstr(aucCmdData, NJM_SET_ABP) != NULL))
     {
@@ -350,13 +500,20 @@ bool WSL305S_AT_IsNetworkJoined(void)
     return bJoined;
 }
 
+
+/**
+ *获取报文发送状态
+ *@param[in]                 无
+ *@retval       true         表示报文发送完成
+ *@retval       false        表示报文发送未完成
+*/
 bool WSL305S_AT_IsPktConfirmed(void)
 {
     char aucCmdData[AT_CMDLEN_MAX] = {0};
     bool bConfirmed  = false;
 
-    printf("WSL305S_AT_IsPktConfirmed\r\n");
-    if ((AT_CMD_SUCCESS != WSL305S_AT_GetATCMD(AT_CFS_GET, aucCmdData, AT_CMDLEN_MAX)) && 
+    DEBUG_PRINT("WSL305S_AT_IsPktConfirmed\r\n");
+    if ((AT_CMD_SUCCESS == WSL305S_AT_GetATCMD(AT_CFS_GET, aucCmdData, AT_CMDLEN_MAX)) && 
         (strstr(aucCmdData, CFS_STATUS_OK) != NULL))
     {
         bConfirmed = true;
@@ -365,13 +522,20 @@ bool WSL305S_AT_IsPktConfirmed(void)
     return bConfirmed;
 }
 
+
+/**
+ *获取模组Fpending状态
+ *@param[in]                 无
+ *@retval       true         表示模组处于Fpending状态
+ *@retval       false        表示模组未处于Fpending状态
+*/
 bool WSL305S_AT_IsServerCached(void)
 {
     char aucCmdData[AT_CMDLEN_MAX] = {0};
     bool bFPending  = false;
 
-    printf("WSL305S_AT_IsServerCached\r\n");
-    if ((AT_CMD_SUCCESS != WSL305S_AT_GetATCMD(AT_FPS_GET, aucCmdData, AT_CMDLEN_MAX)) && 
+    DEBUG_PRINT("WSL305S_AT_IsServerCached\r\n");
+    if ((AT_CMD_SUCCESS == WSL305S_AT_GetATCMD(AT_FPS_GET, aucCmdData, AT_CMDLEN_MAX)) && 
         (strstr(aucCmdData, FPS_PENDING) != NULL))
     {
         bFPending = true;
@@ -380,6 +544,13 @@ bool WSL305S_AT_IsServerCached(void)
     return bFPending;
 }
 
+
+/**
+ *AT指令设置数据速率
+ *@param[in]    ucDR                   速率等级0~7
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetDR(uint8_t ucDR)
 {
     char ucValue = 0;
@@ -388,6 +559,13 @@ uint8_t WSL305S_AT_SetDR(uint8_t ucDR)
     return WSL305S_AT_SetATCMD(AT_DR_SET, &ucValue);
 }
 
+
+/**
+ *AT指令设置接收窗口1延迟时间
+ *@param[in]    ucRX1Delay             单位ms
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetRX1Delay(uint8_t ucRX1Delay)
 {
     char    szRX1Delay[8] = {0};
@@ -398,6 +576,13 @@ uint8_t WSL305S_AT_SetRX1Delay(uint8_t ucRX1Delay)
     return WSL305S_AT_SetATCMD(AT_RX1DL_SET, szRX1Delay);
 }
 
+
+/**
+ *AT指令设置AppKey
+ *@param[in]    pucValue               AppKey字符串指针
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetAppKey(char *pucValue)
 {
     char    szAppKey[HEX_LEN_16 * 3] = {0};
@@ -408,6 +593,13 @@ uint8_t WSL305S_AT_SetAppKey(char *pucValue)
     return WSL305S_AT_SetATCMD(AT_APPKEY_SET, szAppKey);
 }
 
+
+/**
+ *AT指令设置DevEUI
+ *@param[in]    pucValue               DevEUI字符串指针
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetDevEUI(char *pucValue)
 {
     char    szDevEUI[HEX_LEN_8 * 3] = {0};
@@ -418,6 +610,13 @@ uint8_t WSL305S_AT_SetDevEUI(char *pucValue)
     return WSL305S_AT_SetATCMD(AT_DEUI_SET, szDevEUI);
 }
 
+
+/**
+ *AT指令设置DevEUI
+ *@param[in]    pucValue               DevEUI字符串指针
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetAppEUI(char *pucValue)
 {
     char    szAppEUI[HEX_LEN_8 * 3] = {0};
@@ -428,6 +627,13 @@ uint8_t WSL305S_AT_SetAppEUI(char *pucValue)
     return WSL305S_AT_SetATCMD(AT_APPEUI_SET, szAppEUI);
 }
 
+
+/**
+ *AT指令设置NwksKey
+ *@param[in]    pucValue               NwksKey字符串指针
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetNwksKey(char *pucValue)
 {
     char    szNwksKey[HEX_LEN_16 * 3] = {0};
@@ -438,6 +644,13 @@ uint8_t WSL305S_AT_SetNwksKey(char *pucValue)
     return WSL305S_AT_SetATCMD(AT_NWKSKEY_SET, szNwksKey);
 }
 
+
+/**
+ *AT指令设置AppsKey
+ *@param[in]    pucValue               AppsKey字符串指针
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetAppsKey(char *pucValue)
 {
     char    szAppsKey[HEX_LEN_16 * 3] = {0};
@@ -448,6 +661,13 @@ uint8_t WSL305S_AT_SetAppsKey(char *pucValue)
     return WSL305S_AT_SetATCMD(AT_APPSKEY_SET, szAppsKey);
 }
 
+
+/**
+ *AT指令设置DevAddr
+ *@param[in]    uiDevAddr              DevAddr字符串指针
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetDevAddr(uint32_t uiDevAddr)
 {
     char aucAddr[16] = {0};
@@ -458,6 +678,13 @@ uint8_t WSL305S_AT_SetDevAddr(uint32_t uiDevAddr)
     return WSL305S_AT_SetATCMD(AT_DADDR_SET, aucAddr);
 }
 
+
+/**
+ *AT指令设置CFM模式
+ *@param[in]    bConfirm               true为需要确认消息模式，false为不需要确认消息模式
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_SetCFMMode(bool bConfirm)
 {
     char *pcValue = "0";
@@ -470,15 +697,31 @@ uint8_t WSL305S_AT_SetCFMMode(bool bConfirm)
     return WSL305S_AT_SetATCMD(AT_CFM_SET, pcValue);
 }
 
-/* 触发入网 */
+
+/**
+ *触发入网
+ *@param[in]                         无
+ *@retval       AT_CMD_SUCCESS       表示指令执行成功
+ *@retval       AT_CMD_FAILUE        表示指令执行失败
+*/
 uint8_t WSL305S_AT_Join(void)
 {
-    printf("WSL305S_AT_Join\r\n");
+    DEBUG_PRINT("WSL305S_AT_Join\r\n");
     
     /* 发送入网AT指令 */
     return WSL305S_AT_SetATCMD(AT_JOIN_RUN, NULL);
 }
 
+
+/**
+ *从模组送到云端的报文数据发送
+ *@param[in]    bConfirm               发送报文种类，true为Confirm,flase为Unconfirm
+ *@param[in]    ucFPort                数据发送端口号
+ *@param[in]    pData                  待发送的数据字符串指针
+ *@param[in]    ucDataSize             待发送的数据字符串长度
+ *@retval       AT_CMD_SUCCESS         表示指令执行成功
+ *@retval       AT_CMD_FAILUE          表示指令执行失败
+*/
 uint8_t WSL305S_AT_Send(bool bConfirm, 
                               uint8_t ucFPort, char *pData, uint8_t ucDataSize)
 {
@@ -502,6 +745,7 @@ uint8_t WSL305S_AT_Send(bool bConfirm,
         {
             g_bConfirm = bConfirm;
         }
+        Delay(1);  /* 设置报文模式后，延迟一段时间，否则模组发包容易失败 */
     }
 
     if (ucRet == AT_CMD_SUCCESS)
@@ -520,19 +764,30 @@ uint8_t WSL305S_AT_Send(bool bConfirm,
             if (true == bConfirm)
             {
                 g_bPktConfirmed = false;
-                TimerSetValue( &g_stConfirmTimer, (g_ucRx1Delay + 1 + 2) * 8);
+                TimerSetValue( &g_stConfirmTimer, ((g_ucRx1Delay + 1 + 2) * 8) * 1000);
                 TimerStart( &g_stConfirmTimer );
             }
             else
-            {
+            {        
                 g_bUnconfirmSend = true;
             }
+
+            /* 发包后，等待模组空口发包 */
+            DelayMs(500 + (ucDataSize / 10) * 200);
         }
     }
 
     return ucRet;
 }
 
+
+/**
+ *获取云端下发到模组的数据
+ *@param[in]    pcData               获取数据的缓存区指针
+ *@param[in]    ucBufferLen          获取数据的缓存区长度
+ *@param[in]    pcFPort              获取数据端口号
+ *@retval       ucDataCopy           复制到缓冲区的数据长度
+*/
 uint8_t WSL305S_AT_GetData(char *pcData, uint8_t ucBufferLen, uint8_t *pcFPort)
 {
     char aucCmdData[WSL305S_MAX_RX_LEN] = {0};
@@ -540,6 +795,7 @@ uint8_t WSL305S_AT_GetData(char *pcData, uint8_t ucBufferLen, uint8_t *pcFPort)
     uint16_t usDatalen = 0;
     uint16_t usIndex = 0;
     unsigned int uiFPort = 0;
+    unsigned int uiData = 0;
     uint8_t ucDataCopy = 0;
     char *pData = NULL;
 
@@ -560,7 +816,8 @@ uint8_t WSL305S_AT_GetData(char *pcData, uint8_t ucBufferLen, uint8_t *pcFPort)
                     {
                         break;
                     }
-                    sscanf(aucCmdData + usIndex, "%hhx", (unsigned char *)&aucData[ucDataCopy]);
+                    sscanf(aucCmdData + usIndex, "%02x", &uiData);
+                    aucData[ucDataCopy] = (char)uiData;
                     ucDataCopy++;
                     usIndex += 2;
                 }
@@ -570,14 +827,19 @@ uint8_t WSL305S_AT_GetData(char *pcData, uint8_t ucBufferLen, uint8_t *pcFPort)
                     *pcFPort = (uint8_t)uiFPort;
                     ucDataCopy = (ucDataCopy > ucBufferLen) ? ucBufferLen : ucDataCopy;
                     memcpy(pcData, aucData, ucDataCopy);
+//                    DelayMs(200);
                 }
             }
-        }
+        }       
     }
-    
-    return ucDataCopy;
+    return ucDataCopy;   
 }
 
+
+/**
+ *获取从云端下发到模组的数据
+ *@param[in]                 无                                             
+*/
 void WSL305S_AT_Running(void)
 {
     bool bJoined = false;
@@ -585,11 +847,12 @@ void WSL305S_AT_Running(void)
     bool bFPending = false;
     uint8_t ucFPort = 0;
     uint8_t ucRecvLen = 0;
+    uint8_t ucIndex = 0;
     char auData[WSL305S_MAX_DATA_LEN] = {0};
 
     if (g_bJoined == false)
     {
-        Delay(5 + 1);
+        Delay(5 + 3); /* 等待模组收到join accept后去查询 */
         bJoined = WSL305S_AT_IsNetworkJoined();
         if (true == bJoined)
         {
@@ -603,31 +866,56 @@ void WSL305S_AT_Running(void)
     }
     else
     {
-        Delay(g_ucRx1Delay + 1);
         if (g_bUnconfirmSend == true)
         {
+            /* 之前发送了unconfirm报文 */
+            Delay(g_ucRx1Delay + 2);   /* 发完包后, 等待模组接收下行 */
+            
             g_bUnconfirmSend = false;
             if (g_stHandler.Wsl305sMcpsConfirm != NULL)
             {
                 g_stHandler.Wsl305sMcpsConfirm(false, AT_CMD_SUCCESS);
             }
-            bFPending = WSL305S_AT_IsServerCached();
-            ucRecvLen = WSL305S_AT_GetData(auData, WSL305S_MAX_DATA_LEN, &ucFPort);
+
+            do
+            {
+                /* 查看模组是否接收到下行数据，查看云上是否有缓存 */
+                DEBUG_PRINT("GetData try:%d\r\n",ucIndex);
+                bFPending = WSL305S_AT_IsServerCached();
+                ucRecvLen = WSL305S_AT_GetData(auData, WSL305S_MAX_DATA_LEN, &ucFPort);
+                ucIndex++;  
+
+                /* 模组和MCU可能存在时间上的误差，多次查询，每次查询间隔一段时间，提供健壮性 */
+                Delay(2);  
+            }while ((ucIndex < 3) && (ucRecvLen == 0));
         }
         else if ((g_bConfirm == true) && (g_bPktConfirmed == false))
         {
-            bPktConfirmed = WSL305S_AT_IsPktConfirmed();
-            if (true == bPktConfirmed)
+            /* 之前发送了confirm报文 */
+            Delay(g_ucRx1Delay + 2);   /* 发完包后, 等待模组接收下行 */
+            do
             {
-                TimerStop( &g_stConfirmTimer );
-                g_bPktConfirmed = true;
-                if (g_stHandler.Wsl305sMcpsConfirm != NULL)
+                DEBUG_PRINT("GetData try:%d\r\n",ucIndex);
+                bFPending = WSL305S_AT_IsServerCached();
+                ucRecvLen = WSL305S_AT_GetData(auData, WSL305S_MAX_DATA_LEN, &ucFPort);
+                ucIndex++; 
+
+                /* 模组和MCU可能存在时间上的误差，多次查询，每次查询间隔一段时间，提供健壮性 */
+                Delay(2);
+                if (false == g_bPktConfirmed)
                 {
-                    g_stHandler.Wsl305sMcpsConfirm(true, AT_CMD_SUCCESS);
+                    bPktConfirmed = WSL305S_AT_IsPktConfirmed();
+                    if (true == bPktConfirmed)
+                    {
+                        TimerStop( &g_stConfirmTimer );
+                        g_bPktConfirmed = true;
+                        if (g_stHandler.Wsl305sMcpsConfirm != NULL)
+                        {
+                            g_stHandler.Wsl305sMcpsConfirm(true, AT_CMD_SUCCESS);
+                        }
+                    }
                 }
-            }
-            bFPending = WSL305S_AT_IsServerCached();
-            ucRecvLen = WSL305S_AT_GetData(auData, WSL305S_MAX_DATA_LEN, &ucFPort);
+            }while ((ucIndex < 3) && (ucRecvLen == 0));
         }
 
         if ((bFPending == true) || (ucRecvLen > 0))
@@ -641,6 +929,11 @@ void WSL305S_AT_Running(void)
     return;
 }
 
+
+/**
+ *关闭数据收发串口
+ *@param[in]                 无                                             
+*/
 void WSL305S_AT_CloseUart(void)
 {
     UartClose(g_pstUartSerial);
@@ -649,6 +942,11 @@ void WSL305S_AT_CloseUart(void)
     return;
 }
 
+
+/**
+ *打开数据收发串口
+ *@param[in]                 无                                             
+*/
 uint8_t WSL305S_AT_OpenUart(void)
 {
     Uart_t *pstUart = NULL;
@@ -665,6 +963,11 @@ uint8_t WSL305S_AT_OpenUart(void)
     return ucRet;
 }
 
+
+/**
+ *Confirm报文超时定时器初始化
+ *@param[in]           定时器超时事件处理回调函数指针                                                   
+*/
 void WSL305S_AT_Init(WSL305S_CALLBACK_S *pHandler)
 {
     g_stHandler = *pHandler;

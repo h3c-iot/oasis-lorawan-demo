@@ -29,53 +29,53 @@
 #include <stdbool.h>
 
 
-/** AT CMD å®šä¹‰*/
+/** AT CMD ¶¨Òå*/
 /*****************************************************************************/
-/** æ£€æŸ¥è¿çº¿æ˜¯å¦æ­£å¸¸è¿ä½œ */
+/** ¼ì²éÁ¬ÏßÊÇ·ñÕı³£ÔË×÷ */
 #define AT_CONNECT_CHECK    "@AT"               
 #define AT_SHORT_HELP       "@AT?"
 
-/** æ¨¡ç»„é‡å¯ */
+/** Ä£×éÖØÆô */
 #define AT_MCU_RESET_HELP   "@ATZ?"
 #define AT_MCU_RESET        "@ATZ"
 
-/** è®¾ç½®æˆ–æŸ¥è¯¢APPEUI */
+/** ÉèÖÃ»ò²éÑ¯APPEUI */
 #define AT_APPEUI_HELP      "@AT+APPEUI?"
 #define AT_APPEUI_GET       "@AT+APPEUI=?"
 #define AT_APPEUI_SET       "@AT+APPEUI="       
 
-/** è®¾ç½®æˆ–æŸ¥è¯¢APPKEY */
+/** ÉèÖÃ»ò²éÑ¯APPKEY */
 #define AT_APPKEY_HELP      "@AT+APPKEY?"
 #define AT_APPKEY_GET       "@AT+APPKEY=?"
 #define AT_APPKEY_SET       "@AT+APPKEY="       
 
-/** è®¾ç½®æˆ–æŸ¥è¯¢app session key */
+/** ÉèÖÃ»ò²éÑ¯app session key */
 #define AT_APPSKEY_HELP     "@AT+APPSKEY?"
 #define AT_APPSKEY_GET      "@AT+APPSKEY=?"
 #define AT_APPSKEY_SET      "@AT+APPSKEY=" 
 
-/** è®¾ç½®æˆ–æŸ¥è¯¢device address */
+/** ÉèÖÃ»ò²éÑ¯device address */
 #define AT_DADDR_HELP       "@AT+DADDR?"
 #define AT_DADDR_GET        "@AT+DADDR=?"
 #define AT_DADDR_SET        "@AT+DADDR="   
 
-/** è®¾ç½®æˆ–æŸ¥è¯¢device EUI */
+/** ÉèÖÃ»ò²éÑ¯device EUI */
 #define AT_DEUI_HELP        "@AT+DEUI?"
 #define AT_DEUI_GET         "@AT+DEUI=?"
 #define AT_DEUI_SET         "@AT+DEUI="         
 
-/** è®¾ç½®æˆ–æŸ¥è¯¢network session key */
+/** ÉèÖÃ»ò²éÑ¯network session key */
 #define AT_NWKSKEY_HELP     "@AT+NWKSKEY?"
 #define AT_NWKSKEY_GET      "@AT+NWKSKEY=?"
 #define AT_NWKSKEY_SET      "@AT+NWKSKEY="      
 
 
-/** è®¾ç½®confirm mode */
+/** ÉèÖÃconfirm mode */
 #define AT_CFM_HELP         "@AT+CFM?"          
 #define AT_CFM_GET          "@AT+CFM=?"
 #define AT_CFM_SET          "@AT+CFM="  
 
-/** è®¾ç½®confirm status */
+/** ÉèÖÃconfirm status */
 #define AT_CFS_HELP         "@AT+CFS?"          
 #define AT_CFS_GET          "@AT+CFS=?"
 #define AT_CFS_SET          "@AT+CFS="          
@@ -89,133 +89,133 @@
 #define AT_NJM_GET          "@AT+NJM=?"
 #define AT_NJM_SET          "@AT+NJM="         
 
-/** è·å–Loraè¿æ¥å½“å‰çŠ¶æ€ 0ï¼šnot join /1:joined */
+/** »ñÈ¡LoraÁ¬½Óµ±Ç°×´Ì¬ 0£ºnot join /1:joined */
 #define AT_NJS_HELP         "@AT+NJS?"          
 #define AT_NJS_GET          "@AT+NJS=?"         
 
-/** ä»¥åŸå§‹æ ¼å¼è·å–æœ€è¿‘æ”¶åˆ°çš„å­—ä¸²æ•°æ® */
+/** ÒÔÔ­Ê¼¸ñÊ½»ñÈ¡×î½üÊÕµ½µÄ×Ö´®Êı¾İ */
 #define AT_RECV_HELP        "@AT+RECV?"         
 #define AT_RECV_GET         "@AT+RECV=?"        
 
-/** ä»¥äºŒè¿›åˆ¶æ ¼å¼è·å–æœ€è¿‘æ”¶åˆ°çš„å­—ä¸²æ•°æ® */
+/** ÒÔ¶ş½øÖÆ¸ñÊ½»ñÈ¡×î½üÊÕµ½µÄ×Ö´®Êı¾İ */
 #define AT_RECVB_HELP       "@AT+RECVB?"            
 #define AT_RECVB_GET        "@AT+RECVB=?"       
 
-/** åœ¨ä¸“ç”¨ç«¯å£å·ä¸Šå‘é€å­—ä¸²æ•°æ® */
+/** ÔÚ×¨ÓÃ¶Ë¿ÚºÅÉÏ·¢ËÍ×Ö´®Êı¾İ */
 #define AT_SEND_HELP        "@AT+SEND?"         
 #define AT_SEND_RUN         "@AT+SEND="         
 
-/** åœ¨ä¸“ç”¨ç«¯å£å·ä¸Šä»¥äºŒè¿›åˆ¶æ ¼å¼å‘é€å­—ä¸²æ•°æ® */
+/** ÔÚ×¨ÓÃ¶Ë¿ÚºÅÉÏÒÔ¶ş½øÖÆ¸ñÊ½·¢ËÍ×Ö´®Êı¾İ */
 #define AT_SENDB_HELP       "@AT+SENDB?"            
 #define AT_SENDB_RUN        "@AT+SENDB="        
 
-/** è®¾ç½®è‡ªé€‚åº”æ•°æ®é€Ÿç‡çŠ¶æ€    ,0:off/1:on        */
+/** ÉèÖÃ×ÔÊÊÓ¦Êı¾İËÙÂÊ×´Ì¬    ,0:off/1:on        */
 #define AT_ADR_HELP         "@AT+ADR?"          
 #define AT_ADR_GET          "@AT+ADR=?"         
 #define AT_ADR_SET          "@AT+ADR="          
 
-/** è·å–ç”¨æˆ·LoraWANé¢‘åˆ« A/B/C        */
+/** »ñÈ¡ÓÃ»§LoraWANÆµ±ğ A/B/C        */
 #define AT_CLASS_HELP       "@AT+CLASS?"        
 #define AT_CLASS_GET        "@AT+CLASS=?"      
 #define AT_CLASS_SET        "@AT+CLASS="        
 
-/** è®¾ç½®ç”¨æˆ·å ç©ºæ¯”å‚æ•°çŠ¶æ€              0:disable /1:enable */
+/** ÉèÖÃÓÃ»§Õ¼¿Õ±È²ÎÊı×´Ì¬              0:disable /1:enable */
 #define AT_DCS_HELP         "@AT+DCS?"          
 #define AT_DCS_GET          "@AT+DCS=?"         
 #define AT_DCS_SET          "@AT+DCS="          
 
-/** è·å–ç”¨æˆ·æ•°æ®é€Ÿç‡           ï¼Œ0~7 */
+/** »ñÈ¡ÓÃ»§Êı¾İËÙÂÊ           £¬0~7 */
 #define AT_DR_HELP          "@AT+DR?"          
 #define AT_DR_GET           "@AT+DR=?"          
 #define AT_DR_SET           "@AT+DR="           
 
-/** æŸ¥è¯¢è®¾ç½®Fpendingå¼€å…³çŠ¶æ€ï¼Œ0è¡¨ç¤ºæ‰“å¼€ï¼Œ1è¡¨ç¤ºå…³é—­ */
+/** ²éÑ¯ÉèÖÃFpending¿ª¹Ø×´Ì¬£¬0±íÊ¾´ò¿ª£¬1±íÊ¾¹Ø±Õ */
 #define AT_FPC_HELP         "@AT+FPC?"          
 #define AT_FPC_GET          "@AT+FPC=?"         
 #define AT_FPC_SET          "@AT+FPC="          
 
-/** æŸ¥è¯¢æ¨¡ç»„æ˜¯å¦å¤„äºFpendingçŠ¶æ€ */   
+/** ²éÑ¯Ä£×éÊÇ·ñ´¦ÓÚFpending×´Ì¬ */   
 #define AT_FPS_GET          "@AT+FPS=?"    	           
 
-/** è·å–ç”¨æˆ·ä¸‹è¡Œå¸§è®¡æ•°å™¨           ï¼Œè¿”å›å­—ç¬¦ä¸²æ ¼å¼æ•´å½¢æ•° */
+/** »ñÈ¡ÓÃ»§ÏÂĞĞÖ¡¼ÆÊıÆ÷           £¬·µ»Ø×Ö·û´®¸ñÊ½ÕûĞÎÊı */
 #define AT_FCD_HELP         "@AT+FCD?"          
 #define AT_FCD_GET          "@AT+FCD=?"         
 #define AT_FCD_SET          "@AT+FCD="          
 
-/** è·å–ç”¨æˆ·ä¸Šè¡Œå¸§è®¡æ•°å™¨           ï¼Œè¿”å›å­—ç¬¦ä¸²æ ¼å¼æ•´å½¢æ•° */
+/** »ñÈ¡ÓÃ»§ÉÏĞĞÖ¡¼ÆÊıÆ÷           £¬·µ»Ø×Ö·û´®¸ñÊ½ÕûĞÎÊı */
 #define AT_FCU_HELP         "@AT+FCU?"          
 #define AT_FCU_GET          "@AT+FCU=?"         
 #define AT_FCU_SET          "@AT+FCU="          
 
-/** å…è®¸ç”¨æˆ·å­˜å–RXçª—å£1ä¸Šçš„åŠ å…¥å»¶è¿Ÿæ—¶é—´                 */
+/** ÔÊĞíÓÃ»§´æÈ¡RX´°¿Ú1ÉÏµÄ¼ÓÈëÑÓ³ÙÊ±¼ä                 */
 #define AT_JN1DL_HELP       "@AT+JN1DL?"        
 #define AT_JN1DL_GET        "@AT+JN1DL=?"       
 #define AT_JN1DL_SET        "@AT+JN1DL="       
 
-/** å…è®¸ç”¨æˆ·å­˜å–RXçª—å£2ä¸Šçš„åŠ å…¥å»¶è¿Ÿæ—¶é—´                 */
+/** ÔÊĞíÓÃ»§´æÈ¡RX´°¿Ú2ÉÏµÄ¼ÓÈëÑÓ³ÙÊ±¼ä                 */
 #define AT_JN2DL_HELP       "@AT+JN2DL?"        
 #define AT_JN2DL_GET        "@AT+JN2DL=?"      
 #define AT_JN2DL_SET        "@AT+JN2DL="        
 
-/** è·å–å…¬å…±ç½‘ç»œæ¨¡å¼         0:off/1:on */
+/** »ñÈ¡¹«¹²ÍøÂçÄ£Ê½         0:off/1:on */
 #define AT_PNM_HELP         "@AT+PNM?"          
 #define AT_PNM_GET          "@AT+PNM=?"        
 #define AT_PNM_SET          "@AT+PNM="    
 
-/** æ¥æ”¶åˆ°çš„çª—å£1çš„å»¶è¿Ÿæ—¶é—´ */
+/** ½ÓÊÕµ½µÄ´°¿Ú1µÄÑÓ³ÙÊ±¼ä */
 #define AT_RX1DL_HELP       "@AT+RX1DL?"        
 #define AT_RX1DL_GET        "@AT+RX1DL=?"       
 #define AT_RX1DL_SET        "@AT+RX1DL="        
 
-/** æ¥æ”¶åˆ°çš„çª—å£2çš„å»¶è¿Ÿæ—¶é—´ */
+/** ½ÓÊÕµ½µÄ´°¿Ú2µÄÑÓ³ÙÊ±¼ä */
 #define AT_RX2DL_HELP       "@AT+RX2DL?"        
 #define AT_RX2DL_GET        "@AT+RX2DL=?"      
 #define AT_RX2DL_SET        "@AT+RX2DL="        
 
-/** æ¥æ”¶åˆ°çš„çª—å£2çš„æ•°æ®é€Ÿç‡ */
+/** ½ÓÊÕµ½µÄ´°¿Ú2µÄÊı¾İËÙÂÊ */
 #define AT_RX2DR_HELP       "@AT+RX2DR?"        
 #define AT_RX2DR_GET        "@AT+RX2DR=?"       
 #define AT_RX2DR_SET        "@AT+RX2DR="        
 
-/** æ¥æ”¶åˆ°çš„çª—å£2çš„é¢‘ç‡ */
+/** ½ÓÊÕµ½µÄ´°¿Ú2µÄÆµÂÊ */
 #define AT_RX2FQ_HELP       "@AT+RX2FQ?"        
 #define AT_RX2FQ_GET        "@AT+RX2FQ=?"       
 #define AT_RX2FQ_SET        "@AT+RX2FQ="        
 
-/** å­˜å–å‘é€åŠŸç‡ */
+/** ´æÈ¡·¢ËÍ¹¦ÂÊ */
 #define AT_TXP_HELP         "@AT+TXP?"          
 #define AT_TXP_GET          "@AT+TXP=?"         
 #define AT_TXP_SET          "@AT+TXP="          
 
-/** å­˜å–æ¥æ”¶æœ€åä¸€åŒ…çš„RSSI */
+/** ´æÈ¡½ÓÊÕ×îºóÒ»°üµÄRSSI */
 #define AT_RSSI_HELP        "@AT+RSSI?"         
 #define AT_RSSI_GET        "@AT+RSSI=?"       
 
-/** å­˜å–æœ€åæ”¶åˆ°çš„SNRï¼ˆsignal noise ratioï¼‰æ•°æ®ç»„ */
+/** ´æÈ¡×îºóÊÕµ½µÄSNR£¨signal noise ratio£©Êı¾İ×é */
 #define AT_SNR_HELP         "@AT+SNR?"          
 #define AT_SNR_GET          "@AT+SNR=?"         
 
-/** å­˜å–æ¨¡ç»„è½¯ä»¶ç‰ˆæœ¬ */
+/** ´æÈ¡Ä£×éÈí¼ş°æ±¾ */
 #define AT_VER_HELP         "@AT+VER?"          
 #define AT_VER_GET          "@AT+VER=?"         
 
-/** RF RSSIé¢‘ç‡æµ‹è¯• */
+/** RF RSSIÆµÂÊ²âÊÔ */
 #define AT_TRSSI_HELP       "@AT+TRSSI?"        
 #define AT_TRSSI_RUN        "@AT+TRSSI"         
 
-/* RFé¢‘ç‡æµ‹è¯• */
+/* RFÆµÂÊ²âÊÔ */
 #define AT_TTONE_HELP       "@AT+TTONE?"        
 #define AT_TTONE_RUN        "@AT+TTONE"         
 
-/** RF Tx Loraæµ‹è¯• */
+/** RF Tx Lora²âÊÔ */
 #define AT_TTLRA_HELP       "@AT+TTLRA?"       
 #define AT_TTLRA_RUN        "@AT+TTLRA"        
 
-/** RF Rx Loraæµ‹è¯• */
+/** RF Rx Lora²âÊÔ */
 #define AT_TRLRA_HELP       "@AT+TRLRA?"        
 #define AT_TRLRA_RUN        "@AT+TRLRA"         
 
-/** Loraæµ‹è¯•è®¾å®š */
+/** Lora²âÊÔÉè¶¨ */
 #define AT_TCONF_HELP       "@AT+TCONF?"        
 #define AT_TCONF_GET        "@AT+TCONF=?"       
 #define AT_TCONF_SET        "@AT+TCONF="        
@@ -224,97 +224,97 @@
 #define AT_CERTIF_HELP      "@AT+CERTIF?"       
 #define AT_CERTIF_RUN       "@AT+CERTIF"       
 
-/** RX1é¢‘ç‡ =   TXé¢‘ç‡   */
+/** RX1ÆµÂÊ =   TXÆµÂÊ   */
 #define AT_TRX_HELP         "@AT+TRX?"          
 #define AT_TRX_GET          "@AT+TRX=?"         
 #define AT_TRX_SET          "@AT+TRX="          
 
-/** å­˜å–æ¥æ”¶åˆ°çš„çª—å£1çš„é¢‘ç‡            */
+/** ´æÈ¡½ÓÊÕµ½µÄ´°¿Ú1µÄÆµÂÊ            */
 #define AT_RX1FQ_HELP       "@AT+RX1FQ?"        
 #define AT_RX1FQ_GET        "@AT+RX1FQ=?"       
 #define AT_RX1FQ_SET        "@AT+RX1FQ="        
 
-/** å­˜å–å‘å°„é€šé“1çš„é¢‘ç‡            */
+/** ´æÈ¡·¢ÉäÍ¨µÀ1µÄÆµÂÊ            */
 #define AT_TX1FQ_HELP       "@AT+TX1FQ?"        
 #define AT_TX1FQ_GET        "@AT+TX1FQ=?"       
 #define AT_TX1FQ_SET        "@AT+TX1FQ="        
 
-/** å­˜å–å‘å°„é€šé“2çš„é¢‘ç‡            */
+/** ´æÈ¡·¢ÉäÍ¨µÀ2µÄÆµÂÊ            */
 #define AT_TX2FQ_HELP       "@AT+TX2FQ?"        
 #define AT_TX2FQ_GET        "@AT+TX2FQ=?"      
 #define AT_TX2FQ_SET        "@AT+TX2FQ="    
 
-/** å­˜å–å‘å°„é€šé“3çš„é¢‘ç‡            */
+/** ´æÈ¡·¢ÉäÍ¨µÀ3µÄÆµÂÊ            */
 #define AT_TX3FQ_HELP       "@AT+TX3FQ?"        
 #define AT_TX3FQ_GET        "@AT+TX3FQ=?"       
 #define AT_TX3FQ_SET        "@AT+TX3FQ="    
 
-/** å­˜å–å‘å°„é€šé“4çš„é¢‘ç‡            */
+/** ´æÈ¡·¢ÉäÍ¨µÀ4µÄÆµÂÊ            */
 #define AT_TX4FQ_HELP       "@AT+TX4FQ?"       
 #define AT_TX4FQ_GET        "@AT+TX4FQ=?"       
 #define AT_TX4FQ_SET        "@AT+TX4FQ="    
 
-/** å­˜å–å‘å°„é€šé“5çš„é¢‘ç‡            */
+/** ´æÈ¡·¢ÉäÍ¨µÀ5µÄÆµÂÊ            */
 #define AT_TX5FQ_HELP       "@AT+TX5FQ?"       
 #define AT_TX5FQ_GET        "@AT+TX5FQ=?"       
 #define AT_TX5FQ_SET        "@AT+TX5FQ=" 
 
-/** å­˜å–å‘å°„é€šé“6çš„é¢‘ç‡            */
+/** ´æÈ¡·¢ÉäÍ¨µÀ6µÄÆµÂÊ            */
 #define AT_TX6FQ_HELP       "@AT+TX6FQ?"       
 #define AT_TX6FQ_GET        "@AT+TX6FQ=?"       
 #define AT_TX6FQ_SET        "@AT+TX6FQ="   
 
-/** å­˜å–å‘å°„é€šé“7çš„é¢‘ç‡            */
+/** ´æÈ¡·¢ÉäÍ¨µÀ7µÄÆµÂÊ            */
 #define AT_TX7FQ_HELP       "@AT+TX7FQ?"        
 #define AT_TX7FQ_GET        "@AT+TX7FQ=?"       
 #define AT_TX7FQ_SET        "@AT+TX7FQ="   
 
-/* å­˜å–å‘å°„é€šé“8çš„é¢‘ç‡            */
+/* ´æÈ¡·¢ÉäÍ¨µÀ8µÄÆµÂÊ            */
 #define AT_TX8FQ_HELP       "@AT+TX8FQ?"        
 #define AT_TX8FQ_GET        "@AT+TX8FQ=?"       
 #define AT_TX8FQ_SET        "@AT+TX8FQ="        
 
-/** ä¿å­˜å®¢æˆ·å‚æ•°       */
+/** ±£´æ¿Í»§²ÎÊı       */
 #define AT_SAVE_RUN         "@AT+SAVE"          
 
-/** å­˜å–å‘å°„åŠŸç‡ï¼Œ0~20, ä¸”ä¸å—åŒºåŸŸé™åˆ¶               */
+/** ´æÈ¡·¢Éä¹¦ÂÊ£¬0~20, ÇÒ²»ÊÜÇøÓòÏŞÖÆ               */
 #define AT_TXO_HELP         "@AT+TXO?"          
 #define AT_TXO_GET          "@AT+TXO=?"         
 #define AT_TXO_SET          "@AT+TXO="         
 
 
-/** CMD STATUSå®šä¹‰ */
+/** CMD STATUS¶¨Òå */
 /*****************************************************************************/
-/** å‘½ä»¤æ‰§è¡Œæ­£ç¡®è¿”å›OK */
+/** ÃüÁîÖ´ĞĞÕıÈ··µ»ØOK */
 #define AT_STATUS_OK                "OK" 
 
-/** ä¸€èˆ¬é”™è¯¯ */
+/** Ò»°ã´íÎó */
 #define AT_STATUS_ERROR             "AT_ERROR"   
 
-/** å‘½ä»¤æ‰§è¡Œæ­£ç¡®è¿”å›OK */
+/** ÃüÁîÖ´ĞĞÕıÈ··µ»ØOK */
 #define AT_STATUS_SEND_OK           "Send OK" 
 
 #define AT_PARAM_ERROR              "AT_PARAM_ERROR" 
 
-/** ç½‘ç»œå¿™ç¢Œï¼Œå‘½ä»¤æ— æ³•å®Œæˆ */
+/** ÍøÂçÃ¦Âµ£¬ÃüÁîÎŞ·¨Íê³É */
 #define AT_BUSY_EEROR               "AT_BUSY_EEROR"    
 
-/** è¯¥å‚æ•°å¤ªé•¿ */
+/** ¸Ã²ÎÊıÌ«³¤ */
 #define AT_TEST_PARAM_OVERFLOW      "AT_TEST_PARAM_OVERFLOW"  
 
-/** ç½‘ç»œå¿™ç¢Œï¼Œå°šæœªåŠ å…¥ */
+/** ÍøÂçÃ¦Âµ£¬ÉĞÎ´¼ÓÈë */
 #define AT_NO_NETWORK_JOINED        "AT_NO_NETWORK_JOINED"
 
-/** æ¥æ”¶å‘½ä»¤æœŸé—´æ£€æµ‹é”™è¯¯ */
+/** ½ÓÊÕÃüÁîÆÚ¼ä¼ì²â´íÎó */
 #define AT_RX_ERROR                 "AT_RX_ERROR"               
 
-/** ATæŒ‡ä»¤æ‰§è¡ŒæˆåŠŸ */
+/** ATÖ¸ÁîÖ´ĞĞ³É¹¦ */
 #define AT_CMD_SUCCESS              0  
 
-/** ATæŒ‡ä»¤æ‰§è¡Œä¸æˆåŠŸ */
+/** ATÖ¸ÁîÖ´ĞĞ²»³É¹¦ */
 #define AT_CMD_FAILUE               1                          
 
-/** Loraå…¥ç½‘æ¨¡å¼ */
+/** LoraÈëÍøÄ£Ê½ */
 #define NJM_SET_ABP                 "0"
 #define NJM_SET_OTAA                "1"
 
@@ -340,7 +340,7 @@
 #define DATA_RATE_LEVEL6            "6" 
 #define DATA_RATE_LEVEL7            "7" 
 
-/** å‘é€åŠŸç‡çº§åˆ«ï¼Œ0çº§17dBmï¼Œå¾€å2dBé€’å‡ */
+/** ·¢ËÍ¹¦ÂÊ¼¶±ğ£¬0¼¶17dBm£¬Íùºó2dBµİ¼õ */
 #define TX_POWER_LEVEL0             "0"             /* 17dBm */
 #define TX_POWER_LEVEL1             "1"             /* 15dBm */
 #define TX_POWER_LEVEL2             "2"             /* 13dBm */
@@ -360,7 +360,7 @@ typedef struct tagWSL305Callback
 
 
 /* Exported functions ------------------------------------------------------- */
-uint8_t WSL305S_AT_GetATCMD(const char *pucATCMD,char *pucRetValue, uint16_t usBuffLen);
+uint8_t WSL305S_AT_GetATCMD(const char *pucATCMD, char *pucRetValue, uint16_t usBuffLen);
 uint8_t WSL305S_AT_SetATCMD(const char *pucATCMD ,char *pucValue);
 
 void WSL305S_AT_ResetModule(void);
