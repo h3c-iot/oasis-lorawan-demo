@@ -1,39 +1,62 @@
-# ���̴
-* ����Ŀʹ��CMake���й��̵Ĵ������ʹ��CMake���ٱ�������Makefile����ִ��make�������ɿ�ִ���ļ� *
+# 1. 工程搭建
 
-## CMake���뻷��׼��
-### cmake������װ
-��cmake�����������µ�CMake����������װCMake��������װ��ɺ�ȷ��cmake�İ�װ·�����뵽PATH�У��ڿ���̨����ִ��cmake --version�鿴�Ƿ���Ч
+本项目使用CMake进行工程的搭建，可以使用CMake快速编译生成Makefile，再执行make编译生成可执行文件 *
 
-### ������빤������װ
-����Ŀ����ARM cortex-M��Ϊ�������ARM��������arm-none-eabi���湤������Ҳ����ʹ�������汾�Ľ�����빤����������ARM��armcc
+## 1.1 CMake编译环境准备
+### 1.1.1 cmake软件安装
 
-### �makefileִ�л���
-�����windows��������������MinGW�������ṩmake���ߣ���ȷ��MinGW��װ·�����뵽PATH�У��ڿ���̨����ִ��make --version�鿴�Ƿ���Ч��
-�����linux������ϵͳ��װĬ�ϻ��make���ߣ����û������Ҫ��װ
+到cmake官网下载最新的CMake软件，并安装CMake软件，安装完成后确保cmake的安装路径加入到PATH中，在控制台可以执行cmake --version查看是否生效
 
-## Cmake����Makefile�ű�
-### windows����
-a. ��cmd.exe
-b. ���뵽����Ŀ¼��������buildĿ¼
-c. ִ��cmake�ű����룬���磺cmake -DCMAKE_TOOLCHAIN_FILE="..\cmake\toolchain-arm-none-eabi.cmake" -DTOOLCHAIN_PREFIX="C:/Program Files (x86)/GNU Tools ARM Embedded/8 2019-q3-update" -DCMAKE_MAKE_PROGRAM="C:/MinGW/bin/make.exe" -G "MinGW Makefiles" -DMBED_RADIO_SHIELD="SX1276MB1LAS" -DREGION_EU868="ON" -DREGION_CN470="OFF" -DACTIVE_REGION="LORAMAC_REGION_EU868" ..
-   -DCMAKE_TOOLCHAIN_FILE ָ��CMake�Ľű��ļ�
-   -DTOOLCHAIN_PREFIX ָ��������빤��·��
-   -DCMAKE_MAKE_PROGRAM ָ��make����
-   -G "MinGW Makefiles" ָ���������ɵ�Makefile����ΪMinGW Makefiles
-   -DMBED_RADIO_SHIELD="SX1276MB1LAS" -DREGION_EU868="ON" -DREGION_CN470="OFF" -DACTIVE_REGION="LORAMAC_REGION_EU868"��ָ�����̱���ѡ�ͣ�����ο������½ڽ���
-d. ִ�гɹ��󣬻���buildĿ¼������Makefile�ļ��Լ���������ļ���Ŀ¼
-e. ���Ҫ���±��룬����ɾ��buildĿ¼�����ɵ������ļ�������ɾ��CMakeCache.txt�ļ����ټ���ִ��cmake����
+### 1.1.2 交叉编译工具链安装
+本项目基于ARM cortex-M作为案例搭建，ARM官网下载arm-none-eabi交叉工具链，也可以使用其它版本的交叉编译工具链，比如ARM的armcc
 
-### linux����
-ͬwindows����
+### 1.1.3 搭建makefile执行环境
 
-## ����������ļ�
-ִ��make���ɿ�ʼ���룬�������ɵĶ������ļ����ھ����Ӧ��application�ļ�����
+如果是windows环境，可以下载MinGW软件，提供make工具，并确保MinGW安装路径加入到PATH中，在控制台可以执行make --version查看是否生效。
+如果是linux环境，系统安装默认会带make工具，如果没有则需要安装
 
-# ����ѡ��
-## MBED_RADIO_SHIELD
-��Ƶѡ�񣬿�ѡ�������£�
+## 1.2 Cmake制作Makefile脚本
+### 1.2.1 windows环境
+
+a. 打开cmd.exe
+
+b. 进入到工程目录，并进入build目录
+
+c. 执行cmake脚本编译，例如：cmake -DCMAKE_TOOLCHAIN_FILE="..\cmake\toolchain-arm-none-eabi.cmake" -DTOOLCHAIN_PREFIX="C:/Program Files (x86)/GNU Tools ARM Embedded/8 2019-q3-update" -DCMAKE_MAKE_PROGRAM="C:/MinGW/bin/make.exe" -G "MinGW Makefiles" -DMBED_RADIO_SHIELD="SX1276MB1LAS" -DREGION_EU868="ON" -DREGION_CN470="OFF" -DACTIVE_REGION="LORAMAC_REGION_EU868" ..
+   
+* -DCMAKE_TOOLCHAIN_FILE
+
+指定CMake的脚本文件
+* -DTOOLCHAIN_PREFIX 
+
+指定交叉编译工具路径
+* -DCMAKE_MAKE_PROGRAM 
+
+指定make工具
+* -G "MinGW Makefiles" 
+
+指定编译生成的Makefile类型为MinGW Makefiles
+* -DMBED_RADIO_SHIELD="SX1276MB1LAS" -DREGION_EU868="ON" -DREGION_CN470="OFF" -DACTIVE_REGION="LORAMAC_REGION_EU868"
+
+指定工程编译选型，具体参考后续章节介绍
+   
+d. 执行成功后，会在build目录下生成Makefile文件以及其它相关文件和目录
+
+e. 如果要重新编译，可以删除build目录下生成的所有文件，或者删除CMakeCache.txt文件，再继续执行cmake命令
+
+### 1.2.2 linux环境
+
+同windows类似
+
+## 1.3 编译二进制文件
+
+执行make即可开始编译，编译生成的二进制文件会在具体对应的application文件夹下
+
+# 2. 编译选项
+
+## 2.1 MBED_RADIO_SHIELD
+
+射频选择，可选参数如下：
 * SX1272MB2DAS 
 * SX1276MB1LAS 
 * SX1276MB1MAS
@@ -41,50 +64,62 @@ e. ���Ҫ���±��룬����ɾ��buildĿ¼�����ɵ������ļ�������ɾ��CMakeCache.txt�ļ�
 * SX1262MBXCAS 
 * SX1262MBXDAS
 * SX1278H3C     
-* SX1278ACSIPS78F  ��Ĭ��
+* SX1278ACSIPS78F  ：默认
 * WSL305S
-����ͨ��-DMBED_RADIO_SHIELD="SX1276MB1LAS"������ѡ��
+
+可以通过-DMBED_RADIO_SHIELD="SX1276MB1LAS"来进行选择
 
 
-## ����Ƶ�ι��ܿ���
-* REGION_EU868 : Ĭ�� OFF
-* REGION_US915 : Ĭ�� OFF
-* REGION_CN779 : Ĭ�� OFF
-* REGION_EU433 : Ĭ�� OFF
-* REGION_AU915 : Ĭ�� OFF
-* REGION_AS923 : Ĭ�� OFF
-* REGION_CN470 : Ĭ�� ON
-* REGION_KR920 : Ĭ�� OFF
-* REGION_IN865 : Ĭ�� OFF
-* REGION_RU864 : Ĭ�� OFF
-����ͨ��-DREGION_XXXXX="ON"������ͨ��-DREGION_XXXXX="OFF"�رգ�֧�ֶ����ͬʱ������������Ҫ����һ��
+## 2.2 国家频段功能开关
 
-## ACTIVE_REGION
-��ǰ�汾�����Ĺ���Ƶ�Σ���ѡ�������£�
+* REGION_EU868 : 默认 OFF
+* REGION_US915 : 默认 OFF
+* REGION_CN779 : 默认 OFF
+* REGION_EU433 : 默认 OFF
+* REGION_AU915 : 默认 OFF
+* REGION_AS923 : 默认 OFF
+* REGION_CN470 : 默认 ON
+* REGION_KR920 : 默认 OFF
+* REGION_IN865 : 默认 OFF
+* REGION_RU864 : 默认 OFF
+
+可以通过-DREGION_XXXXX="ON"开启，通过-DREGION_XXXXX="OFF"关闭，支持多项开关同时开启，但至少要开启一项
+
+## 2.3 ACTIVE_REGION
+
+当前版本工作的国家频段，可选参数如下：
+
 * LORAMAC_REGION_EU868 
 * LORAMAC_REGION_US915 
 * LORAMAC_REGION_CN779
 * LORAMAC_REGION_EU433 
 * LORAMAC_REGION_AU915 
 * LORAMAC_REGION_AS923 
-* LORAMAC_REGION_CN470 : Ĭ��
+* LORAMAC_REGION_CN470 : 默认
 * LORAMAC_REGION_KR920 
 * LORAMAC_REGION_IN865 
 * LORAMAC_REGION_RU864
-����ͨ��-DACTIVE_REGION="LORAMAC_REGION_XXXXX"������ѡ��
+可以通过-DACTIVE_REGION="LORAMAC_REGION_XXXXX"来进行选择
 
-## APPLICATION
-ָ����ǰ�����Ӧ�ð���������ͨ��-DAPPLICATION="XXXXXX"ѡ�񣬿�ѡ�������£�
+## 2.4 APPLICATION
+
+指定当前编译的应用案例，可以通过-DAPPLICATION="XXXXXX"选择，可选参数如下：
+
 * classA
-  �ٷ���ClassA��������
+
+  官方的ClassA案例程序
 * classC
-  �ٷ���classC��������
+
+  官方的classC案例程序
 * classB
-  �ٷ���classB����������Ҫ����Class Bʹ��
-* newclassA ��Ĭ��
-  �ں�SDK��ܺ��ṩ��class A���������ṩ̽����������
+
+  官方的classB案例程序，需要开启Class B使能
+* newclassA ：默认
+
+  融合SDK框架后提供的class A案例程序，提供探测入网功能
 * FwUpdate
-  ��ԹⱦWSL305Sģ��ı�����������  
+
+  针对光宝WSL305S模组的本地升级案例  
   
-## CLASSB_ENABLED
-ClassBʹ�ܿ��أ�����ͨ��-DCLASSB_ENABLED="ON"������Ĭ�Ϲرա�
+## 2.5 CLASSB_ENABLED
+ClassB使能开关，可以通过-DCLASSB_ENABLED="ON"开启，默认关闭。
