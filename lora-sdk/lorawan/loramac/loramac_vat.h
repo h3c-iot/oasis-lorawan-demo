@@ -32,6 +32,7 @@
 #ifndef __LORAMAC_VAT_H__
 #define __LORAMAC_VAT_H__
 
+
 /**
  * @brief   获取当前入网状态
  *

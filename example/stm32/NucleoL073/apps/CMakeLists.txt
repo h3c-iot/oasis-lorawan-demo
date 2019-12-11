@@ -50,6 +50,7 @@ add_executable( ${APPLICATION}
                 $<TARGET_OBJECTS:ladapter>
                 $<TARGET_OBJECTS:3rd_board>
                 $<TARGET_OBJECTS:lorawan-apps>
+                $<TARGET_OBJECTS:net>
                 $<TARGET_OBJECTS:NucleoL073>
 		$<TARGET_OBJECTS:middleware>             
 	)

@@ -306,13 +306,7 @@
 #define AT_NO_NETWORK_JOINED        "AT_NO_NETWORK_JOINED"
 
 /** 接收命令期间检测错误 */
-#define AT_RX_ERROR                 "AT_RX_ERROR"               
-
-/** AT指令执行成功 */
-#define AT_CMD_SUCCESS              0  
-
-/** AT指令执行不成功 */
-#define AT_CMD_FAILUE               1                          
+#define AT_RX_ERROR                 "AT_RX_ERROR"                  
 
 /** Lora入网模式 */
 #define NJM_SET_ABP                 "0"
@@ -371,6 +365,7 @@ uint8_t WSL305S_AT_CheckBoard(void);
 bool WSL305S_AT_IsNetworkJoined(void);
 bool WSL305S_AT_IsPktConfirmed(void);
 bool WSL305S_AT_IsServerCached(void);
+uint8_t WSL305S_AT_GetPktQuality(uint16_t *pusRSSI, uint8_t *pucSNR);
 
 uint8_t WSL305S_AT_SetDR(uint8_t ucDR);
 

@@ -47,7 +47,7 @@
 /*!
  * Minimal datarate that can be used by the node
  */
-#define CN470_TX_MIN_DATARATE                       DR_0
+#define CN470_TX_MIN_DATARATE                       DR_1  /* modify by wangzhen */
 
 /*!
  * Maximal datarate that can be used by the node
@@ -57,7 +57,7 @@
 /*!
  * Minimal datarate that can be used by the node
  */
-#define CN470_RX_MIN_DATARATE                       DR_0
+#define CN470_RX_MIN_DATARATE                       DR_1  /* modify by wangzhen */
 
 /*!
  * Maximal datarate that can be used by the node
@@ -67,7 +67,7 @@
 /*!
  * Default datarate used by the node
  */
-#define CN470_DEFAULT_DATARATE                      DR_0
+#define CN470_DEFAULT_DATARATE                      DR_1  /* modify by wangzhen */
 
 /*!
  * Minimal Rx1 receive datarate offset

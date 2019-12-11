@@ -34,15 +34,6 @@
 
 #include <stdbool.h>
 
-/**
- * 返回状态成功
- */
-#define    LADAPTER_SUCCES  0
-
-/**
- * 返回状态失败
- */
-#define    LADAPTER_FAILED  1
 
 /**
  * 入网方式
@@ -62,21 +53,6 @@ typedef enum tagLAdapterNetworkType
       */
     LADAPTER_NWKTYPE_MAX
 }LADAPTER_NWKTYPE_E;
-
-/**
- * 报文类型
- */
-typedef enum tagLAdapterPktsType
-{
-    /** 
-      * 不需要确认类型 
-      */
-    LADAPTER_PKTSTYPE_UNCONFIRMED,
-    /** 
-      * 需要确认类型 
-      */
-    LADAPTER_PKTSTYPE_CONFIRMED,
-}LADAPTER_PKTSTYPE_E;
     
 /**
  * 数据速率
@@ -107,13 +83,9 @@ typedef enum tagLAdapterDR
      * CN470: SF7
      */
     LADAPTER_DR_5,
-    /**
-     * CN470: SF6
-     */
+
     LADAPTER_DR_6,
-    /**
-     * CN470: SF5
-     */
+
     LADAPTER_DR_7,
 }LADAPTER_DR_E;
 
@@ -183,7 +155,7 @@ typedef struct tagLAdapterPktHandler
     /**
      * 处理下行数据回调函数
      */    
-    void ( *pfLAdapter_ProcFRMPktReceive )( char *pcData, uint8_t ucDataLen);
+    void ( *pfLAdapter_ProcFRMPktReceive )( uint8_t ucFPort, char *pcData, uint8_t ucDataLen, uint16_t usRSSI, uint8_t ucSNR);
     /**
      * 下行确认处理结果回调函数
      */
@@ -222,16 +194,15 @@ typedef struct tagLAdapterHandler
  *
  * @param  [输入] LADAPTER_HANDLER_S* Mac处理函数回调结构体
  *
- * @param  [输入] ucCacheCnt LADAPTER层发送缓存队列长度，如果输入为0，则默认为1
  */
-void LADAPTER_Init(LADAPTER_HANDLER_S *pHander, uint8_t ucCacheCnt);
+void LADAPTER_Init(LADAPTER_HANDLER_S *pHander);
 
 /**
  * @brief  入网命令处理流程
  *
- * @retval LADAPTER_SUCCES 表示入网命令处理失败
+ * @retval ERROR_SUCCESS 表示入网命令处理失败
  *
- * @retval LADAPTER_FAILED 表示入网命令处理成功
+ * @retval ERROR_FAILED 表示入网命令处理成功
  */
 uint8_t LADAPTER_Join(void);
 
@@ -240,15 +211,18 @@ uint8_t LADAPTER_Join(void);
  */
 void LADAPTER_Running(void);
 
+uint8_t LADAPTER_Send(bool bConfirm, uint8_t ucFPort, char *pcData, uint8_t ucDataSize);
+
+
 /**
- * @brief  Fport端口回调注册入口
- *
- * @param  [输入] unsigned char 类型的端口.
+ * @brief  报文处理回调注册入口
  *
  * @param  [输入] LADAPTER_PKTHANDLER_S收发包处理回调函数句柄
  *
  */
-uint8_t LADAPTER_RegisterFRMPktProc(uint8_t ucFPort, LADAPTER_PKTHANDLER_S *pstPKtHandler);
+void LADAPTER_RegisterFRMPktProc(LADAPTER_PKTHANDLER_S *pstPKtHandler);
+
+
 
 /**
  * @brief  获取当前是否入网
@@ -259,24 +233,6 @@ uint8_t LADAPTER_RegisterFRMPktProc(uint8_t ucFPort, LADAPTER_PKTHANDLER_S *pstP
  */
 bool LADAPTER_IsNetworkJoined(void);
 
-/**
- * @brief  发送接口
- *
- * @param  [输入] enConfirmType 发送数据的类型
- *         ,enConfirmType = LADAPTER_PKTSTYPE_CONFIRMED 表示发送需要确认的报文
- *         ,enConfirmType = LADAPTER_PKTSTYPE_UNCONFIRMED 表示发送不需要确认的报文.
- *
- * @param  [输入] unsigned char 类型的端口
- *
- * @param  [输入] char* 类型的发送数据
- *
- * @param  [输入] unsigned char 类型的发送数据长度
- *
- * @retval Not NULL 表示发送报文的Handler
- *
- * @retval NULL 表示发送失败，缓存队列满了
- */
-void *LADAPTER_Send(LADAPTER_PKTSTYPE_E enConfirmType, uint8_t ucFPort, char * pData, uint8_t ucDataSize);
 
 /**
  * @brief  设置入网发射信道组的发射频率
@@ -287,7 +243,7 @@ void *LADAPTER_Send(LADAPTER_PKTSTYPE_E enConfirmType, uint8_t ucFPort, char * p
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetJoinChannelGroup(uint8_t ucChnlGrp);
 
@@ -300,7 +256,7 @@ uint8_t LADAPTER_SetJoinChannelGroup(uint8_t ucChnlGrp);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetWorkChannelGroup(uint8_t ucChnlGrp);
 
@@ -312,7 +268,7 @@ uint8_t LADAPTER_SetWorkChannelGroup(uint8_t ucChnlGrp);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetNetwork(LADAPTER_NWKTYPE_E enNetWork);
 
@@ -323,7 +279,7 @@ uint8_t LADAPTER_SetNetwork(LADAPTER_NWKTYPE_E enNetWork);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetTxPower(LADAPTER_PWRLEVEL_E enPowerLevel);
 
@@ -334,7 +290,7 @@ uint8_t LADAPTER_SetTxPower(LADAPTER_PWRLEVEL_E enPowerLevel);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetDR(LADAPTER_DR_E enDR);
 
@@ -347,7 +303,7 @@ uint8_t LADAPTER_SetDR(LADAPTER_DR_E enDR);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetADR(bool bAdrON);
 
@@ -358,7 +314,7 @@ uint8_t LADAPTER_SetADR(bool bAdrON);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetRX1Delay(uint8_t ucRx1Delay);
 
@@ -372,7 +328,7 @@ uint8_t LADAPTER_SetRX1Delay(uint8_t ucRx1Delay);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetClassMode(LADAPTER_CLASS_E enClass);
 
@@ -383,7 +339,7 @@ uint8_t LADAPTER_SetClassMode(LADAPTER_CLASS_E enClass);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetDevAddr(uint32_t uiDevAddr);
 
@@ -401,7 +357,7 @@ uint8_t LADAPTER_SetABPVersion(uint32_t uiVersion);
  * 
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetAPPKey(uint8_t *pucAppKey);
 
@@ -412,7 +368,7 @@ uint8_t LADAPTER_SetAPPKey(uint8_t *pucAppKey);
  * 
  * @retval LADAPTER_SUCCESS 表示设置成功
  * 
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetNWKKey(uint8_t *pucNwkKey);
 
@@ -423,7 +379,7 @@ uint8_t LADAPTER_SetNWKKey(uint8_t *pucNwkKey);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetFNWKKey(uint8_t *pucFNwkKey);
 
@@ -434,7 +390,7 @@ uint8_t LADAPTER_SetFNWKKey(uint8_t *pucFNwkKey);
  * 
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetSNWKKey(uint8_t *pucSNwkKey);
 
@@ -445,7 +401,7 @@ uint8_t LADAPTER_SetSNWKKey(uint8_t *pucSNwkKey);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetNWKSKey(uint8_t *pucNwkSKey);
 
@@ -456,7 +412,7 @@ uint8_t LADAPTER_SetNWKSKey(uint8_t *pucNwkSKey);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetAPPSKey(uint8_t *pucAppSKey);
 
@@ -467,7 +423,7 @@ uint8_t LADAPTER_SetAPPSKey(uint8_t *pucAppSKey);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetJoinEUI(uint8_t *pucJoinEUI);
 
@@ -478,7 +434,7 @@ uint8_t LADAPTER_SetJoinEUI(uint8_t *pucJoinEUI);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetDevEUI(uint8_t *pucDevEUI);
 
@@ -489,7 +445,7 @@ uint8_t LADAPTER_SetDevEUI(uint8_t *pucDevEUI);
  *
  * @retval LADAPTER_SUCCESS 表示设置成功
  *
- * @retval LADAPTER_FAILED 表示设置失败
+ * @retval ERROR_FAILED 表示设置失败
  */
 uint8_t LADAPTER_SetNetID(uint32_t uiNetID);
 

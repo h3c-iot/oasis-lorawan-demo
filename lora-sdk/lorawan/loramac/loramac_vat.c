@@ -349,7 +349,7 @@ LoRaMacStatus_t LORAMAC_VAT_Join( void )
     if (true != LORAMAC_VAT_IsNetworkJoined())
     {
         stMlmeReq.Type = MLME_JOIN;
-        stMlmeReq.Req.Join.Datarate = DR_0;
+        stMlmeReq.Req.Join.Datarate = DR_1;
 
         // Starts the join procedure
         enStatus = LoRaMacMlmeRequest( &stMlmeReq );

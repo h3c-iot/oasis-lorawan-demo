@@ -30,12 +30,16 @@
 #include <stdio.h>
 #include <string.h>
 #include "utilities.h"
+#include "base.h"
 #include "board.h"
 #include "gpio.h"
 #include "delay.h"
 #include "Commissioning.h"
 #include "NvmCtxMgmt.h"
 #include "ladapter.h"
+#include "oasisnet.h"
+#include "oasis.h"
+
 
 /**
  * 发送应用数据的周期 10000 单位:ms
@@ -92,24 +96,9 @@ static uint32_t DevAddr = LORAWAN_DEVICE_ADDRESS;
 
 
 /**
- * 定期发送应用数据的定时器
- */
-static TimerEvent_t TxNextPacketTimer;
-
-/**
- * 表示是否需要上行新的报文
- */
-static bool NextTx = true;
-
-/**
  * 表示是否入网
  */
 static bool g_bJoined = false;
-
-/**
- * 表示是否处于报文发送,接收，或者Mac处理周期内
- */
-static uint8_t g_bSending = false;
 
 /**
  * 表示发送是否需要确认的报文
@@ -146,141 +135,6 @@ static void PrintHexBuffer( uint8_t *buffer, uint8_t size )
     printf( "\r\n" );
 }
 
-/*************************** Join Function**************************/
-#if THIS_IS("LORA_JOIN")
-typedef void ( *LORA_JOINProcess_PF )( bool bJoined);
-
-/**
- * 表示是否处于入网处理流程
- */
-static bool g_bJoining = false;
-
-/**
- * 表示发射信道组 g_ucGrp = 1:发射频率470.3 ~ 471.7MHZ
- */
-static uint8_t g_ucGrp = 1;
-
-/**
- * 表示当前信道组入网的次数
- */
-static uint8_t g_ucChannelRetry = 0;
-
-/**
- * 表示已探测的入网信道组数
- */
-static uint8_t g_ucGrpRetry = 0;
-
-/**
- * 入网处理函数指针
- */
-LORA_JOINProcess_PF g_pfJoinProcess = NULL;
-
-/**
-* @brief   开始入网流程.
-*
-* @param   [输入] uinsined char类型的入网开始探测的信道组
-*
-* @param   [输入] LORA_JOINProcess_PF类型的指针,存放入网处理函数的地址.
-*
-*/
-static void LoRaJoinStart(uint8_t ucChnlGrp, LORA_JOINProcess_PF pfLoRaJoinProcess)
-{
-    if (g_bJoining == true)
-    {
-        return;
-    }
-
-    printf("Start Join survey\r\n");
-    (void)LADAPTER_SetJoinChannelGroup(ucChnlGrp);
-    g_ucGrp = ucChnlGrp;
-    g_ucChannelRetry = 0;
-    g_pfJoinProcess = pfLoRaJoinProcess;
-   
-
-#if defined( LORA_MODULE_WSL30X )
-    LADAPTER_SetNetwork(LADAPTER_NWKTYPE_OTAA);
-#endif
-
-    if (LADAPTER_SUCCES == LADAPTER_Join())
-    {
-        g_bJoining = true;
-    }
-
-    return;
-}
-
-/**
-* @brief   开始入网流程.
-*
-* @param   [输入] uinsined char类型的入网结果
-*          ,0表示入网成功
-*          ,非0表示入网失败
-*/
-static void LoRaJoinChannelSurvey(uint8_t ucJoinResult)
-{
-    bool bReJoin = false;
-    
-    if( ucJoinResult == LADAPTER_SUCCES)
-    {
-        printf("Join success, group[%d]\r\n", g_ucGrp);
-        LADAPTER_SetWorkChannelGroup(g_ucGrp);
-        g_bJoining = false;
-        if (g_pfJoinProcess != NULL)
-        {
-            g_pfJoinProcess(true);
-        }
-    }
-    else
-    {
-        /** Join was not successful. Try to join again */
-        g_ucChannelRetry++;
-        if (g_ucChannelRetry < 3)
-        {
-            bReJoin = true;
-        }
-        else
-        {
-            g_ucGrpRetry++;
-            g_ucChannelRetry = 0;
-            if (g_ucGrpRetry < 12)
-            {
-                bReJoin = true;
-            }
-            
-            g_ucGrp++;
-            if (g_ucGrp > 12)
-            {
-                g_ucGrp = 1;
-            }
-            LADAPTER_SetJoinChannelGroup(g_ucGrp);
-        }
-        
-        if (bReJoin == true)
-        {
-            printf("Join retry, group[%d], channel retry[%d], group retry[%d]\r\n", 
-                      g_ucGrp, g_ucChannelRetry, g_ucGrpRetry);
-#if !defined( LORA_MODULE_WSL30X )
-            (void)LADAPTER_Join( );
-#endif 
-            g_bJoining = true;
-        }
-        else
-        {
-            g_bJoining = false;
-            if (g_pfJoinProcess != NULL)
-            {
-                g_pfJoinProcess(false);
-            }
-        }
-    }
-
-    return;
-}
-
-
-/*************************** Join END**************************/
-#endif
-
 #if THIS_IS("LORA_SEND")
 
 #define LORA_MAX_CACHE_LEN   10
@@ -311,6 +165,12 @@ typedef struct tagPKTCache
 static PKT_CACHE_S g_stPktCache = {0};
 
 /**
+ * 表示是否处于报文发送,接收，或者Mac处理周期内
+ */
+static uint8_t g_bSending = false;
+
+
+/**
 * 发送Cache数组待确认的报文.
 */
 static void LoRaTriggerSend(void)
@@ -322,7 +182,7 @@ static void LoRaTriggerSend(void)
         pstNode = &g_stPktCache.astDataList[g_stPktCache.ucOut];
         printf("Trigger send packet, index[%d], bConfirm[%d], FPort[%d]\r\n", 
                         g_stPktCache.ucOut, pstNode->bConfirm, pstNode->ucFPort);
-        if (NULL != LADAPTER_Send((LADAPTER_PKTSTYPE_E)pstNode->bConfirm, pstNode->ucFPort, 
+        if (OASIS_NETPKT_HANDLER_INVALID != OASISNET_SendPkt((OASIS_NETPKT_TYPE_E)pstNode->bConfirm, pstNode->ucFPort, 
                                             pstNode->aucData, pstNode->ucLen))
         {
             printf("Send success, index[%d], bConfirm[%d], FPort[%d]\r\n", 
@@ -376,43 +236,20 @@ static int8_t LoRaSendPkt(bool bConfirm, uint8_t ucFPort, char *pcData, uint8_t 
 }
 
 /**
-* @brief   应用Fpendding处理函数.
-*
-* @param   [输入]   bool类型变量
-*          ,bFPending = true 表示下行报文Fpending标记位为1 
-*          ,bFPending = false 表示下行报文Fpending标记位为0.
-*
-*/
-static void LoRaReceiveFPending(bool bFPending)
-{
-    char aucData[8] = {0x00, };
-    
-    if (g_stPktCache.ucCnt == 0)
-    {
-        printf("Receive FPending, Send pull packet\r\n");
-        LoRaSendPkt(false, 3, aucData, 1);
-    }
-    
-    return;
-}
-
-/**
 * @brief   应用Mcps确认处理函数.
 *
-* @param   [输入]   bool类型变量
-*          ,bConfirmePkt = true 表示发送的需要确认的报文 
-*          ,bConfirmePkt = false 表示发送的是不需要确认的报文.
+* @param   [输入]   LADAPTER_PKTHANDLER pPktHandler 指向报文句柄
 *
 * @param   [输入]   unsigned char类型的确认处理结果
-*          ,ucResult = LADAPTER_SUCCES 表示确认处理成功
-*          ,ucResult = LADAPTER_FAILED 表示确认处理失败
+*          ,ucResult = ERROR_SUCCESS 表示确认处理成功
+*          ,ucResult = ERROR_FAILED 表示确认处理失败
 *
 */
-static void LoRaMcpsConfirm(uint8_t ucResult)
+static void LoRaMcpsConfirm(OASIS_NETPKT_HANDLER hPktHandler, uint8_t ucResult)
 {
     PKT_NODE_S *pstNode = NULL;
     
-    if ((ucResult == LADAPTER_SUCCES) && (g_stPktCache.ucCnt != 0))
+    if ((ucResult == ERROR_SUCCESS) && (g_stPktCache.ucCnt != 0))
     {
         pstNode = &g_stPktCache.astDataList[g_stPktCache.ucOut];
         
@@ -486,7 +323,7 @@ static void SetNetConfig(void)
 #endif
         LADAPTER_SetClassMode(LADAPTER_CLASS_A);
         LADAPTER_SetADR(false);
-        LADAPTER_SetDR(LADAPTER_DR_0);
+        LADAPTER_SetDR(LADAPTER_DR_1);
         LADAPTER_SetTxPower(LADAPTER_PWRLEVEL_0);
         LADAPTER_SetRX1Delay(5);
     }
@@ -502,7 +339,7 @@ static void SetNetConfig(void)
 * @param   [输入]   unsigned char类型的数据长度.
 *
 */
-static void processPort128FRMPkt( char *pcData, uint8_t ucDataLen)
+static void processPort128FRMPkt(char *pcData, uint8_t ucDataLen)
 {
     printf( "RX PORT     : %d\r\n", LORAWAN_APP_PORT128 );
 
@@ -546,33 +383,17 @@ static void processPort128FRMPkt( char *pcData, uint8_t ucDataLen)
 */
 static void OnJoinProcess( bool bJoined)
 {
-    g_bJoined = bJoined;
-}
-
-/**
-* @brief   超时发包事件,用于周期发送报文的定时器事件.
-*
-*/
-static void OnTxNextPktTimerEvent( void* context )
-{    
-    char aucData[8] = {0x00, };
-    
-    TimerStop( &TxNextPacketTimer );
-
-    if (true == g_bJoined)
+    if (bJoined == true)
     {
-        if (g_stPktCache.ucCnt == 0)
-        {
-            printf("Next tx timeout, Send pull packet\r\n");
-            LoRaSendPkt(false, 3, aucData, 1);
-        }
+        OASIS_SendConfigSYNCReq();
+        OASIS_StartAliveTimer();
     }
     else
     {
-        LoRaJoinStart(1, OnJoinProcess);
+        OASIS_StopAliveTimer();
+        OASISNET_Join();
     }
-
-    NextTx = true;
+    g_bJoined = bJoined;
     
     return;
 }
@@ -583,43 +404,42 @@ static void OnTxNextPktTimerEvent( void* context )
  */
 int main( void )
 {
-    LADAPTER_HANDLER_S stHandler;
-    LADAPTER_PKTHANDLER_S stPktHandler = {0};
-
+    OASISNET_HANDLER_S stHandler;
+    OASISNET_PKT_HANDLER_S stPktHandler = {0};
+    OASIS_HANDLER_S stOasisHandler;
+    
     /** Board Init */
     BoardInitMcu( );
     BoardInitPeriph( );
-    
+
+    printf("new-classa start.\r\n");
     DelayMs(5000);
     
     /** Handler CallBack Init */
-    stHandler.pfLAdapter_JoinServer = LoRaJoinChannelSurvey;
-    stHandler.pfLAdapter_ReceiveFPending = LoRaReceiveFPending;
-    stHandler.pfLAdapter_BoardGetBatteryLevel = NULL;
-    stHandler.pfLAdapter_OnMacProcessNotify = NULL;
-    stHandler.pfLAdapter_GetTemperatureLevel = NULL;
-    LADAPTER_Init(&stHandler, 1);
+    stHandler.pfOasisNet_BoardGetBatteryLevel = NULL;
+    stHandler.pfOasisNet_GetTemperatureLevel = NULL;
+    stHandler.pfOasisNet_JOINProcess = OnJoinProcess;
+    OASISNET_Init(&stHandler, 1);
+
+    stOasisHandler.pfOasis_ResetModule = NULL;
+    OASIS_Init(&stOasisHandler);
 
     /** Net Config Set */
     SetNetConfig();
 
-    stPktHandler.pfLAdapter_ProcFRMPktReceive = processPort128FRMPkt;
-    stPktHandler.pfLAdapter_ProcMcpsConfirm = LoRaMcpsConfirm;
-    LADAPTER_RegisterFRMPktProc(LORAWAN_APP_PORT128, &stPktHandler);
-
-    stPktHandler.pfLAdapter_ProcFRMPktReceive = NULL;
-    stPktHandler.pfLAdapter_ProcMcpsConfirm = LoRaMcpsConfirm;
-    LADAPTER_RegisterFRMPktProc(3, &stPktHandler);
-
-    /** Tx Timer Init */
-    TimerInit( &TxNextPacketTimer, OnTxNextPktTimerEvent );
+    stPktHandler.pfOasis_ProcFRMPktReceive = processPort128FRMPkt;
+    stPktHandler.pfOasis_ProcMcpsConfirm = LoRaMcpsConfirm;
+    OASISNET_RegisterFRMPktProc(LORAWAN_APP_PORT128, &stPktHandler);
 
 #if( OVER_THE_AIR_ACTIVATION == 0 ) /* ABP */
     LADAPTER_SetNetwork(LADAPTER_NWKTYPE_ABP);
     g_bJoined = true;
 #else
     /** OTAA LoRa Net Start */
-    LoRaJoinStart(1, OnJoinProcess);
+#if defined( LORA_MODULE_WSL30X )
+    LADAPTER_SetNetwork(LADAPTER_NWKTYPE_OTAA);
+#endif
+    OASISNET_Join();
 #endif
 
     while( 1 )
@@ -630,15 +450,7 @@ int main( void )
             Radio.IrqProcess( );
         }
         /** Processes the LoRaMac events */
-        LADAPTER_Running();
-
-        if( NextTx == true)
-        {
-            /** Schedule next packet transmission */
-            TimerSetValue( &TxNextPacketTimer, APP_TX_DUTYCYCLE );
-            TimerStart( &TxNextPacketTimer );
-            NextTx = false;
-        }
+        OASISNET_Run();
 
         if (g_bJoined == true)
         {
