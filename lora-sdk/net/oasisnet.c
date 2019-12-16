@@ -573,12 +573,15 @@ OASIS_NETPKT_HANDLER OASISNET_SendPkt(OASIS_NETPKT_TYPE_E enConfirmType, uint8_t
     bool bConfirm = true;
     OASIS_NETPKT_HANDLER hPktHandler = OASIS_NETPKT_HANDLER_INVALID;
 
-    if (OASIS_NETPKT_CONFIRMED != enConfirmType)
+    if (g_bJoined == true)
     {
-        bConfirm = false;
-    }
+        if (OASIS_NETPKT_CONFIRMED != enConfirmType)
+        {
+            bConfirm = false;
+        }
 
-    hPktHandler = (OASIS_NETPKT_HANDLER)OasisNetPkt_AddPktNode(bConfirm, ucFPort, pData, ucDataSize);
+        hPktHandler = (OASIS_NETPKT_HANDLER)OasisNetPkt_AddPktNode(bConfirm, ucFPort, pData, ucDataSize);
+    }
 
     return hPktHandler;
 }
@@ -674,9 +677,9 @@ uint8_t OASISNET_Join(void)
 {
     uint8_t ucRet = ERROR_SUCCESS;
     
-    if (g_bJoining == true)
+    if ((g_bJoining == true) || (g_bJoined == true))
     {
-        /* 正在入网，返回成功*/
+        /* 正在入网或已经入网，返回成功*/
         return ERROR_SUCCESS;
     }
 
@@ -696,7 +699,10 @@ uint8_t OASISNET_Join(void)
 
 void OASISNET_Run(void)
 {
-    OasisNetPkt_TriggerSend();
+    if (g_bJoined == true)
+    {
+        OasisNetPkt_TriggerSend();
+    }
 
     LADAPTER_Running();
     return;

@@ -346,14 +346,11 @@ LoRaMacStatus_t LORAMAC_VAT_Join( void )
     LoRaMacStatus_t enStatus = LORAMAC_STATUS_OK;
     MlmeReq_t stMlmeReq;
     
-    if (true != LORAMAC_VAT_IsNetworkJoined())
-    {
-        stMlmeReq.Type = MLME_JOIN;
-        stMlmeReq.Req.Join.Datarate = DR_1;
+    stMlmeReq.Type = MLME_JOIN;
+    stMlmeReq.Req.Join.Datarate = DR_1;
 
-        // Starts the join procedure
-        enStatus = LoRaMacMlmeRequest( &stMlmeReq );
-    }
+    // Starts the join procedure
+    enStatus = LoRaMacMlmeRequest( &stMlmeReq );
 
     return enStatus;
 }
@@ -385,6 +382,5 @@ void LORAMAC_VAT_Init(LoRaMacCallback_t *pstMacCallbacks, LoRaMacPrimitives_t *p
     
     return;
 }
-
 
 

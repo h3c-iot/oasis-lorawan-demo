@@ -278,13 +278,6 @@ static uint8_t Oasis_TriggerSendPullDataReq(void)
     return ucRet;
 }
 
-static void Oasis_PullTimerCB(void *context)
-{
-    DEBUG_PRINT("[Oasis]Pull timer timeout.\r\n");
-    Oasis_TriggerSendPullDataReq();
-    return;
-}
-
 /**
 * @brief 发送Cache数组待确认的报文.
 */
@@ -398,6 +391,12 @@ static void Oasis_ResendPktTimerCB(void *context)
     return;
 }
 
+static void Oasis_PullTimerCB(void *context)
+{
+    DEBUG_PRINT("[Oasis]Pull timer timeout.\r\n");
+    Oasis_TriggerSendPullDataReq();
+    return;
+}
 static void Oasis_ProcMcpsConfirm(OASIS_NETPKT_HANDLER hPktHandler, uint8_t ucResult)
 {
     OASIS_PKT_NODE_S *pstNode = NULL;
@@ -421,9 +420,12 @@ static void Oasis_ProcMcpsConfirm(OASIS_NETPKT_HANDLER hPktHandler, uint8_t ucRe
         {
             /* 停止重传定时器*/
             OasisPkt_StopResendTimer();
-            g_ucOasksPktReSendCnt = 0;
-            
+
             OasisPkt_DelNode();
+            g_ucOasksPktReSendCnt = 0;
+
+            /*触发下一个报文发送*/
+            Oasis_TriggerSend();
         }
         else if (pstNode->enPktType == OASIS_PKT_TYPE_APPCFM)
         {
@@ -538,6 +540,9 @@ static void Oasis_ProcKeepAliveRSP(void)
     DEBUG_PRINT("[Oasis]Process Keepalive response.\r\n");
     OasisPkt_DelNodeByMsgType(OASIS_MSGTYPE_ALIVE);
 
+    /*触发下一个报文发送*/
+    Oasis_TriggerSend();
+
     return;
 }
 
@@ -622,6 +627,9 @@ static void Oasis_ProcSyncConfigEnd(void)
     
     DEBUG_PRINT("[Oasis]Process Sync config End.\r\n");
     OasisPkt_DelNodeByMsgType(OASIS_MSGTYPE_SYNC_START);
+
+    /*触发下一个报文发送*/
+    Oasis_TriggerSend();
     
     return;
 }
