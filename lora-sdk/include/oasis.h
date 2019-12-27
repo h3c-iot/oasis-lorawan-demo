@@ -44,11 +44,32 @@ typedef struct tagOasisHandler
     void (*pfOasis_ResetModule)( void );
 }OASIS_HANDLER_S; 
 
-
+/**
+ * @brief 发送配置同步请求 
+ */
 void OASIS_SendConfigSYNCReq(void);
+
+/**
+ * @brief 停止保活报文定时器  
+ */
 void OASIS_StopAliveTimer(void);
+
+/**
+ * @brief 启动保活报文定时器   
+ */
 void OASIS_StartAliveTimer(void);
+
+/**
+ * @brief   用于数据同步的报文
+ *          ,开放给外部使用的
+ *          ,使用confirm的方式
+ */
 void OASIS_SendPullDataReq(void);
+
+/**
+ * @brief   绿洲扩展协议初始化
+ *
+ */
 void OASIS_Init(OASIS_HANDLER_S *pstTypeHandler);
 
 #endif /*__OASIS_H__*/

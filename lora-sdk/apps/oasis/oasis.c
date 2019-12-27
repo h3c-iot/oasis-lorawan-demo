@@ -129,11 +129,19 @@ static OASIS_HANDLER_S g_stOasisHandler = {0};
 
 typedef enum tagOASISPktType
 {
-    OASIS_PKT_TYPE_UNCFM = 0x00,    /* 链路层不可靠传输*/
-    OASIS_PKT_TYPE_LINKCFM = 0x01,  /* 链路层保证可靠传输, 所有下行需要response都用本模型*/
-    OASIS_PKT_TYPE_APPCFM  = 0x02,  /* 应用层保证可靠传输, request&response模型*/
+    /* 链路层不可靠传输*/
+    OASIS_PKT_TYPE_UNCFM = 0x00,  
+    
+    /* 链路层保证可靠传输, 所有下行需要response都用本模型*/
+    OASIS_PKT_TYPE_LINKCFM = 0x01, 
+
+    /* 应用层保证可靠传输, request&response模型*/
+    OASIS_PKT_TYPE_APPCFM  = 0x02, 
 }OASIS_PKT_TYPE_E;
 
+/**
+* Packet Node结构体
+*/
 typedef struct tagPKTNode
 {
     OASIS_NETPKT_HANDLER hPkthander;
@@ -338,7 +346,7 @@ static void Oasis_TriggerSend(void)
 *
 * @param   [输入] unsigned char 类型的发送数据长度.
 *
-* @return  char类型ucIndex 表示缓存在Cache数组中发送信息的索引
+* @return  unsigned char类型ucIndex 表示缓存在Cache数组中发送信息的索引
 *
 */
 static uint8_t Oasis_SendPacket(OASIS_PKT_TYPE_E enPktTYPE, OASIS_MSGTYPE_E enType,
@@ -357,14 +365,17 @@ static uint8_t Oasis_SendPacket(OASIS_PKT_TYPE_E enPktTYPE, OASIS_MSGTYPE_E enTy
 
     return ucRet;
 }
-
+                               
+/**
+ * @brief  超时重传事件
+ */
 static void Oasis_ResendPktTimerCB(void *context)
 {
     OASIS_PKT_NODE_S *pstNode = NULL;
 
     OasisPkt_StopResendTimer();
     DEBUG_PRINT("[Oasis]Resend packet timer timeout.\r\n");
-
+    
     g_bOasisPktSending = false;
     pstNode = OasisPkt_GetNode();
     if (pstNode != NULL)
@@ -390,12 +401,24 @@ static void Oasis_ResendPktTimerCB(void *context)
     return;
 }
 
+/**
+ * @brief  超时拉取数据请求事件
+ *
+ */
 static void Oasis_PullTimerCB(void *context)
 {
     DEBUG_PRINT("[Oasis]Pull timer timeout.\r\n");
     Oasis_TriggerSendPullDataReq();
     return;
 }
+
+/**
+ * @brief  绿洲扩展协议层应答处理函数
+ *
+ * @param  [输入] OASIS_NETPKT_HANDLER 上层应答报文对应的请求报文标识. 
+ *
+ * @param  [输入] unsigned char 类型的应答处理结果. 
+ */
 static void Oasis_ProcMcpsConfirm(OASIS_NETPKT_HANDLER hPktHandler, uint8_t ucResult)
 {
     OASIS_PKT_NODE_S *pstNode = NULL;
@@ -440,11 +463,9 @@ static void Oasis_ProcMcpsConfirm(OASIS_NETPKT_HANDLER hPktHandler, uint8_t ucRe
 }
 
 /**
- * @brief   设置ADR开关
+ * @brief   返回码处理
  *
- * @retval  APP_OASIS_SUCEESS  表示配置成功
- *
- * @retval  APP_OASIS_FAILED   表示配置失败
+ * @return  ucDataLen  表示添加返回码的长度
  */
 static uint8_t Oasis_AddConfigResponse(char *pRespData, uint8_t ucResult, uint8_t ucTypeID)
 {
@@ -470,14 +491,14 @@ static uint8_t Oasis_AddConfigResponse(char *pRespData, uint8_t ucResult, uint8_
 static TimerEvent_t g_stOasisAliveTxTimer;
 
 /**
- * 保活报文发送间隔
+ * 保活报文发送间隔 单位:秒
  */
 static uint32_t g_uiAliveInterval = OASIS_ALIVE_INTERVAL;
 
 
 #if (OASIS_SDK_KEEPALIVE_INTERVAL == 1)
 /**
- * @brief   设置ADR开关
+ * @brief   保活报文发送周期
  *
  * @retval  OASIS_TYPE_SUCEESS  表示配置成功
  *
@@ -515,6 +536,11 @@ static uint8_t Oasis_ProcAliveInterval(char *pcData, uint8_t ucBuffLeft,
 }
 #endif
 
+/**
+ * @brief 超时发送保活报文
+ *
+ * @param void*类型的指针,未使用
+ */
 static void Oasis_KeepAliveCB(void *context)
 {
     char szData[3] = {0x02,0x00,OASIS_MSGTYPE_ALIVE};
@@ -526,11 +552,15 @@ static void Oasis_KeepAliveCB(void *context)
         szData[1] = g_ucUPSN;
         Oasis_SendPacket(OASIS_PKT_TYPE_APPCFM, OASIS_MSGTYPE_ALIVE, szData, sizeof(szData));
     }
+
     OASIS_StartAliveTimer();
     
     return;
 }
 
+/**
+ * @brief 保活报文应答处理  
+ */
 static void Oasis_ProcKeepAliveRSP(void)
 {
     /* 停止重传定时器*/
@@ -570,7 +600,7 @@ void OASIS_StartAliveTimer(void)
 
 #if ( OASIS_SDK_INTELIGENCE_DATARATE == 1 )
 /**
- * @brief   智能调速开关
+ * @brief   设置智能调速开关
  *
  * @retval  OASIS_TYPE_SUCEESS  表示配置成功
  *
@@ -614,10 +644,6 @@ static void Oasis_ProcSyncConfigStart(char *pcData, uint8_t ucBuffLeft)
 
 /**
  * @brief   设置同步开始或结束配置
- *
- * @retval  OASIS_TYPE_SUCEESS  表示配置成功
- *
- * @retval  ERROR_FAILED   表示配置失败
  */
 static void Oasis_ProcSyncConfigEnd(void)
 {
@@ -705,6 +731,10 @@ static uint8_t Oasis_ProcSetCSMACA(char *pcData, uint8_t ucBuffLeft,
 }
 #endif
 
+/**
+ * @brief   超时重启事件
+ *
+ */
 static void Oasis_ResetTimerCB(void * context)
 {
     if(g_stOasisHandler.pfOasis_ResetModule != NULL)
@@ -740,6 +770,10 @@ static void Oasis_ProcResetDevice(void)
     return; 
 }
 
+/**
+ * @brief   绿洲扩展协议包处理
+ *
+ */
 static void Oasis_ProcPort14FRMPkt(char *pcRecvData, uint8_t ucDataLen)
 {
     uint8_t i = 0;
@@ -860,7 +894,11 @@ static void Oasis_ProcPort14FRMPkt(char *pcRecvData, uint8_t ucDataLen)
     return;
 }
 
-/* 开放给外部使用的用于数据同步的报文，使用confirm的方式*/
+/**
+ * @brief   用于数据同步的报文
+ *          ,开放给外部使用的
+ *          ,使用confirm的方式
+ */
 void OASIS_SendPullDataReq(void)
 {
     char szData[2] = {0x00,OASIS_MSGTYPE_DATA_PULL};

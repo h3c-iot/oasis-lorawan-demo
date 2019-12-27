@@ -32,9 +32,14 @@
 #ifndef __OASISNET_H__
 #define __OASISNET_H__
 
-
+/**
+ * 网络层队列地址数据类型
+ */
 #define OASIS_NETPKT_HANDLER          uint32_t
 
+/**
+ * 网络层队列无效地址
+ */
 #define OASIS_NETPKT_HANDLER_INVALID  (OASIS_NETPKT_HANDLER)0
 
 
@@ -66,7 +71,9 @@ typedef struct tagOASISNETHandler
      * 获取电量回调函数
      */
     uint8_t ( *pfOasisNet_BoardGetBatteryLevel)( void );
+    
     void ( *pfOasisNet_JOINProcess )( bool bJoined);
+        
 }OASISNET_HANDLER_S;
 
 
@@ -107,26 +114,66 @@ OASIS_NETPKT_HANDLER OASISNET_SendPkt(OASIS_NETPKT_TYPE_E enConfirmType, uint8_t
 
 
 /**
- * @brief  Fport端口回调注册入口
+ * @brief   Fport端口回调注册入口
  *
- * @param  [输入] uint8_t 报文端口
- * @param  [输入] LADAPTER_PKTHANDLER_S收发包处理回调函数句柄
+ * @param   [输入] unsigned char 类型的注册端口
+ *          
+ * @param   [输入] OASISNET_PKT_HANDLER_S* 类型的上层回调函数指针结构体
  *
+ * @retval ERROR_SUCCESS 表示注册成功
+ *
+ * @retval ERROR_FAILED 表示注册失败
  */
 uint8_t OASISNET_RegisterFRMPktProc(uint8_t ucFPort, OASISNET_PKT_HANDLER_S *pstPKtHandler);
 
+/**
+ * @brief   拉取数据请求
+ *
+ * @param   [输入] OASIS_NETPKT_TYPE_E 类型变量
+ *               OASIS_NETPKT_UNCONFIRMED 表示非确认
+ *               OASIS_NETPKT_CONFIRMED 表示需要确认
+ */
 void OASISNET_SendPullDataReq(OASIS_NETPKT_TYPE_E enPktType);
 
+/**
+ * @brief   网络层初始化
+ *
+ */
 void OASISNET_Init(OASISNET_HANDLER_S *pstNetHandler, uint8_t ucCacheCnt);
 
-uint8_t OASISNET_Join(void);
+/**
+ * @brief   入网处理流程
+ *
+ */
+ uint8_t OASISNET_Join(void);
 
+/**
+ * @brief   网络层运行函数
+ *
+ */
 void OASISNET_Run(void);
 
+/**
+* @brief   设置智能调速开关.
+*
+* @param   [输入] bool类型的变量
+*          ,true表示打开智能调速
+*          ,false表示关闭智能调速
+*/
 void OASISNET_SetIntelligentDR(bool bOn);
 
+/**
+ * @brief   设置ADR开关
+ *
+ * @param   [输入] bool类型变量 true表示打开
+ *                  ,false表示关闭
+ */
 uint8_t OASISNET_SetADR(bool bADROn);
 
+/**
+ * @brief   链路检查
+ *
+ */
 void OASISNET_DoLinkCheck(void);
 
 

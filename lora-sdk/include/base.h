@@ -38,7 +38,7 @@
 #define ERROR_PARAMETER_INVALID    2      /* 参数错误*/
 #define ERROR_NOT_SUPPORT          3      /* 参数错误*/
 #define ERROR_BUFFER_FULL          4      /* 缓冲区满*/
-
+#define ERROR_REJOIN               5      /* 重新入网*/
 
 #endif  /* __BASE_H__ */
 

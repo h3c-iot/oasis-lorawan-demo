@@ -25,6 +25,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "uart.h"
 #include "delay.h"
 #include "wsl305s.h"
@@ -548,19 +549,30 @@ bool WSL305S_AT_IsServerCached(void)
 uint8_t WSL305S_AT_GetPktQuality(uint16_t *pusRSSI, uint8_t *pucSNR)
 {
     char aucCmdData[AT_CMDLEN_MAX] = {0};
-    uint8_t ucRet  = ERROR_FAILED;
+    uint8_t ucRet  = ERROR_SUCCESS;
     uint16_t usRSSI = 0;
     uint8_t ucSNR = 0;
 
     DEBUG_PRINT("WSL305S_AT_GetPktQuality\r\n");
     if ((ERROR_SUCCESS == WSL305S_AT_GetATCMD(AT_RSSI_GET, aucCmdData, AT_CMDLEN_MAX)) && 
-        (0 < sscanf(aucCmdData, "%hd", (int16_t *)&usRSSI)) &&
-        (ERROR_SUCCESS == WSL305S_AT_GetATCMD(AT_SNR_GET, aucCmdData, AT_CMDLEN_MAX)) && 
-        (0 < sscanf(aucCmdData, "%hhd", (int8_t *)&ucSNR)))
+        (0 < sscanf(aucCmdData, "%hd", (int16_t *)&usRSSI)))
     {
-        ucRet = ERROR_SUCCESS;
         *pusRSSI = usRSSI;
+
+    }
+    else
+    {
+        ucRet = ERROR_FAILED;
+    }
+    
+    if((ERROR_SUCCESS == WSL305S_AT_GetATCMD(AT_SNR_GET, aucCmdData, AT_CMDLEN_MAX)) )
+    {
+        ucSNR = (int8_t)atoi(aucCmdData);
         *pucSNR = ucSNR;
+    }
+    else
+    {
+        ucRet = ERROR_FAILED;
     }
     
     return ucRet;
@@ -728,7 +740,7 @@ uint8_t WSL305S_AT_SetCFMMode(bool bConfirm)
 */
 uint8_t WSL305S_AT_Join(void)
 {
-    DEBUG_PRINT("WSL305S_AT_Join\r\n");
+    g_bJoined = false;
     
     /* 发送入网AT指令 */
     return WSL305S_AT_SetATCMD(AT_JOIN_RUN, NULL);

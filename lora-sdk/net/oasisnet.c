@@ -43,16 +43,30 @@
 /** 下行数据回调处理函数指针结构体*/
 static OASISNET_PKT_HANDLER_S *g_apfFRMPayloadHandler[255] = {NULL};
 
+/**
+ * 表示丢包次数
+ */
 static uint8_t g_ucPktDroped = 0;
 
+/**
+ * 表示自适应速率开关
+ */
 static bool g_bAdrOn = false;
 
+/**
+ * 表示发送数据速率
+ */
 static LADAPTER_DR_E g_enDR = LADAPTER_DR_1;
 
+/**
+ * 表示基础发送数据速率
+ */
 static LADAPTER_DR_E g_enBaseDR = LADAPTER_DR_1;
 
+/**
+ * 表示是否入网
+ */
 static bool g_bJoined = false;
-
 
 /**
  * 表示是否处于入网处理流程
@@ -79,6 +93,9 @@ static uint8_t g_ucGrpRetry = 0;
  */
 OASISNET_HANDLER_S g_stOasisNetHandler = {NULL,};
 
+/**
+ * 拉去数据定时器
+ */
 static TimerEvent_t g_stOasisNetPullTimer;
 
 
@@ -93,9 +110,23 @@ static TimerEvent_t g_stOasisNetPullTimer;
  */
 typedef struct tagOasisNETPKTNode
 {
+    /**
+     * 端口
+     */
     uint8_t ucFPort;
+    /**
+     * 是否确认
+     */
     bool bConfirm;
+    
+    /**
+     * 数据长度
+     */
     uint8_t ucLen;
+
+    /**
+     * 数据
+     */
     char aucData[OASIS_NETPKT_MAX_DATA_LEN];
 }OASIS_NETPKT_NODE_S;
 
@@ -134,6 +165,13 @@ typedef struct tagOasisNETPKTCache
 /** 全局结构体变量,用于存放上层应用待发送的报文*/
 static OASIS_NETPKT_CACHE_S g_stOasisNetPktCache = {0};
 
+/**
+ * @brief   获取当前Cache内存中是否为空
+ *
+ * @retval  返回true 表示Cache队列中为空
+ *
+ * @retval  返回false 表示Cache队列不为空
+ */
 static inline bool OasisNetPkt_IsCacheEmpty(void)
 {
     return (g_stOasisNetPktCache.ucCnt == 0);
@@ -142,9 +180,9 @@ static inline bool OasisNetPkt_IsCacheEmpty(void)
 /**
  * @brief   获取当前Cache内存中是否堆满了待发送的报文
  *
- * @retval  返回true 表示Cache内存中堆满了待发送的报文 
+ * @retval  返回true 表示Cache队列中堆满了待发送的报文 
  *
- * @retval  返回false 表示Cache内存中没有堆满待发送的报文
+ * @retval  返回false 表示Cache队列中没有堆满待发送的报文
  */
 static inline bool OasisNetPkt_IsCacheFull(void)
 {
@@ -318,9 +356,23 @@ static bool g_bIntellengencyAdr = true;
 
 /** 连续收到报文的计数*/
 static uint8_t g_ucPktRcvCnt = 0;
+
+/**
+ * 信号强度平均值
+ *
+ */
 static int16_t g_sRSSIAvg = 0;
+
+/**
+ * 信噪比平均值
+ *
+ */
 static int8_t g_cSNRAvg = 0;
 
+/**
+ * @brief   智能调速状态恢复默认
+ *
+ */
 static inline void OasisNet_ClearIntelligentDR(void)
 {
     g_ucPktRcvCnt = 0;
@@ -330,6 +382,13 @@ static inline void OasisNet_ClearIntelligentDR(void)
     return;
 }
 
+/**
+ * @brief   智能调速处理流程
+ *
+ * @param   [输入] unsigned short类型的信号强度
+ *                         
+ * @param   [输入] unsigned char类型的信噪比
+ */
 static void OasisNet_IntelligentDR(uint16_t usRSSI, uint8_t ucSNR)
 {
     if (g_bIntellengencyAdr)
@@ -365,6 +424,13 @@ static void OasisNet_IntelligentDR(uint16_t usRSSI, uint8_t ucSNR)
     return;
 }
 
+/**
+* @brief   设置智能调速开关.
+*
+* @param   [输入] bool类型的变量
+*          ,true表示打开智能调速
+*          ,false表示关闭智能调速
+*/
 void OASISNET_SetIntelligentDR(bool bOn)
 {
     if (bOn == false)
@@ -512,7 +578,7 @@ static void OasisNet_ProcMcpsConfirm( uint8_t ucRet )
         }
 
         if ((g_apfFRMPayloadHandler[pstPktNode->ucFPort] != NULL) &&
-            (g_apfFRMPayloadHandler[pstPktNode->ucFPort]->pfOasis_ProcMcpsConfirm!= NULL))
+            (g_apfFRMPayloadHandler[pstPktNode->ucFPort]->pfOasis_ProcMcpsConfirm != NULL))
         {
             g_apfFRMPayloadHandler[pstPktNode->ucFPort]->pfOasis_ProcMcpsConfirm((OASIS_NETPKT_HANDLER)pstPktNode, ucRet);
         }
@@ -553,13 +619,26 @@ static void OasisNet_ProcFRMPktReceive(uint8_t ucFPort, char *pcData, uint8_t uc
     return;
 }
 
+/**
+ * @brief   发送拉取数据超时事件
+ *
+ * @param   [输入] void* 类型的参数,暂无.
+ *             
+ */
 static void OasisNet_PullTimerCB(void *context)
 {
     DEBUG_PRINT("[Net]Pull timer timeout.\r\n");
     OASISNET_SendPullDataReq(OASIS_NETPKT_CONFIRMED);
+    
     return;
 }
 
+/**
+ * @brief   Fpendig标记处理
+ *
+ * @param   [输入] bool 类型标记true表示下行报文fpending位为1
+ *                 ,false 为 0
+ */
 static void OasisNet_ReceiveFPending(bool bFPending)
 {
     DEBUG_PRINT("[Net]Receive FPending.\r\n");
@@ -568,6 +647,20 @@ static void OasisNet_ReceiveFPending(bool bFPending)
     return;
 }
 
+
+/**
+ * @brief   发送拉取数据超时事件
+ *
+ * @param   [输入] OASIS_NETPKT_TYPE_E enConfirmType 确认类型
+ * 
+ * @param   [输入] unsigned char 类型的端口
+ * 
+ * @param   [输入] char* 类型的指针表示发送的数据
+ *             
+ * @param   [输入] unsigned char 类型的发送数据的长度
+ *
+ * @return OASIS_NETPKT_HANDLER 类型表示进队列的位置
+ */
 OASIS_NETPKT_HANDLER OASISNET_SendPkt(OASIS_NETPKT_TYPE_E enConfirmType, uint8_t ucFPort, char *pData, uint8_t ucDataSize)
 {
     bool bConfirm = true;
@@ -586,6 +679,17 @@ OASIS_NETPKT_HANDLER OASISNET_SendPkt(OASIS_NETPKT_TYPE_E enConfirmType, uint8_t
     return hPktHandler;
 }
 
+/**
+ * @brief   Fport端口回调注册入口
+ *
+ * @param   [输入] unsigned char 类型的注册端口
+ *          
+ * @param   [输入] OASISNET_PKT_HANDLER_S* 类型的上层回调函数指针结构体
+ *
+ * @retval ERROR_SUCCESS 表示注册成功
+ *
+ * @retval ERROR_FAILED 表示注册失败
+ */
 uint8_t OASISNET_RegisterFRMPktProc(uint8_t ucFPort, OASISNET_PKT_HANDLER_S *pstPKtHandler)
 {
     OASISNET_PKT_HANDLER_S *pstHandler = NULL;
@@ -607,6 +711,11 @@ uint8_t OASISNET_RegisterFRMPktProc(uint8_t ucFPort, OASISNET_PKT_HANDLER_S *pst
     return ucRet;
 }
 
+/**
+ * @brief   发送拉取数据超时事件
+ *
+ * @param   [输入] unsigned char 类型注册端口
+ */
 void OASISNET_DeRegisterFRMPktProc(uint8_t ucFPort)
 {
     OASISNET_PKT_HANDLER_S *pstHandler = NULL;
@@ -622,6 +731,11 @@ void OASISNET_DeRegisterFRMPktProc(uint8_t ucFPort)
     return;
 }
 
+/**
+ * @brief   设置网络层基础速率
+ *
+ * @param   [输入] LADAPTER_DR_E类型表示设置的数据速率
+ */
 void OASISNET_SetNetBaseDR(LADAPTER_DR_E enBaseDR)
 {
     g_enBaseDR = enBaseDR;
@@ -630,6 +744,12 @@ void OASISNET_SetNetBaseDR(LADAPTER_DR_E enBaseDR)
     return;
 }
 
+
+/**
+ * @brief   设置网络层工作信道组
+ *
+ * @param   [输入] unsigned char类型表示设置的工作信道组
+ */
 void OASISNET_SetChannelGrp(uint8_t ucChnlGrp)
 {
     g_ucGrp = ucChnlGrp;
@@ -638,6 +758,10 @@ void OASISNET_SetChannelGrp(uint8_t ucChnlGrp)
 }
 
 #if ( OASIS_SDK_LINK_CHECK == 1 )
+/**
+ * @brief   链路检查
+ *
+ */
 void OASISNET_DoLinkCheck(void)
 {
 
@@ -646,6 +770,12 @@ void OASISNET_DoLinkCheck(void)
 #endif
 
 #if ( OASIS_SDK_ADR == 1 )
+/**
+ * @brief   设置ADR开关
+ *
+ * @param   [输入] bool类型变量 true表示打开
+ *                  ,false表示关闭
+ */
 uint8_t OASISNET_SetADR(bool bADROn)
 {
     uint8_t ucRet = ERROR_SUCCESS;
@@ -660,6 +790,13 @@ uint8_t OASISNET_SetADR(bool bADROn)
 }
 #endif
 
+/**
+ * @brief   拉取数据请求
+ *
+ * @param   [输入] OASIS_NETPKT_TYPE_E 类型变量
+ *               OASIS_NETPKT_UNCONFIRMED 表示非确认
+ *               OASIS_NETPKT_CONFIRMED 表示需要确认
+ */
 void OASISNET_SendPullDataReq(OASIS_NETPKT_TYPE_E enPktType)
 {
     char szData[1] = {0x00};
@@ -673,6 +810,10 @@ void OASISNET_SendPullDataReq(OASIS_NETPKT_TYPE_E enPktType)
     return;
 }
 
+/**
+ * @brief   入网处理流程
+ *
+ */
 uint8_t OASISNET_Join(void)
 {
     uint8_t ucRet = ERROR_SUCCESS;
@@ -697,6 +838,10 @@ uint8_t OASISNET_Join(void)
     return ucRet;
 }
 
+/**
+ * @brief   网络层运行函数
+ *
+ */
 void OASISNET_Run(void)
 {
     if (g_bJoined == true)
@@ -708,6 +853,10 @@ void OASISNET_Run(void)
     return;
 }
 
+/**
+ * @brief   网络层初始化
+ *
+ */
 void OASISNET_Init(OASISNET_HANDLER_S *pstNetHandler, uint8_t ucCacheCnt)
 {
     LADAPTER_PKTHANDLER_S stPktHandler = {0};
