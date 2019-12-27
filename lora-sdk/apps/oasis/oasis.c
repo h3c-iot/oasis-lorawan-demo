@@ -365,6 +365,7 @@ static void Oasis_ResendPktTimerCB(void *context)
     OasisPkt_StopResendTimer();
     DEBUG_PRINT("[Oasis]Resend packet timer timeout.\r\n");
 
+    g_bOasisPktSending = false;
     pstNode = OasisPkt_GetNode();
     if (pstNode != NULL)
     {
@@ -374,7 +375,6 @@ static void Oasis_ResendPktTimerCB(void *context)
             g_ucOasksPktReSendCnt++;
             DEBUG_PRINT("[Oasis]Resend packet for %d times, packet type[%d], msg type[%d]\r\n", 
                         g_ucOasksPktReSendCnt, pstNode->enPktType, pstNode->enType);
-            Oasis_TriggerSend();
         }
         else
         {
@@ -382,10 +382,9 @@ static void Oasis_ResendPktTimerCB(void *context)
                         pstNode->enPktType, pstNode->enType);
             OasisPkt_DelNode();
             g_ucOasksPktReSendCnt = 0;
-            
-            /*触发下一个报文发送*/
-            Oasis_TriggerSend();
         }
+        /*触发下一个报文发送*/
+        Oasis_TriggerSend();
     }
     
     return;
